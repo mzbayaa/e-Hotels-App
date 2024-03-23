@@ -1,6 +1,13 @@
 import React from "react";
+import { Navbar } from "../Navbar";
+import Header from "../Header";
 import "./List.css";
 
 export const List = () => {
-  return <div>List</div>;
+  return (
+    <div>
+      <Navbar />
+      <Header type="list" />
+    </div>
+  );
 };

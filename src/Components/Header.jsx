@@ -59,6 +59,7 @@ const Header = ({ type }) => {
           type === "list" ? "header-container list-mode" : "header-container"
         }
       >
+        {/* list elements */}
         <div className="header-list">
           <div className="header-list-item active">
             <FontAwesomeIcon icon={faBed} />
@@ -84,11 +85,11 @@ const Header = ({ type }) => {
         {type !== "list" && (
           <>
             <h1 className="header-title">
-              A lifetime of discounts? It's Genius.
+              Unlock Genius Deals: Your Gateway to Savings!
             </h1>
             <p className="header-description">
-              Get rewarded for your travels – unlock instant savings of 10% or
-              more with a free Lamabooking account
+              Earn rewards while you travel – enjoy instant savings of 10% or
+              more with your free **name** account!
             </p>
             <button className="header-button">Sign in / Register</button>
             <div className="header-search">

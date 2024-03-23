@@ -45,6 +45,7 @@
   border: none;
   padding: 10px;
   cursor: pointer;
+  border-radius: 20px;
 }
 
 .header-search {
@@ -60,6 +61,7 @@
   bottom: -25px;
   width: 100%;
   max-width: 1024px;
+  border-radius: 30px;
 }
 
 .header-icon {
