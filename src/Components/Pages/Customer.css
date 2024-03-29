@@ -17,7 +17,9 @@ label {
 }
 
 input[type="date"],
-select {
+input[type="number"],
+select,
+input[type="text"] {
   width: 100%;
   padding: 8px;
   font-size: 16px;
@@ -28,7 +30,7 @@ select {
 .error {
   color: red;
   font-size: 14px;
-  margin-top: 5px; /* Add some spacing between error message and input */
+  margin-top: 5px;
 }
 
 .btn {

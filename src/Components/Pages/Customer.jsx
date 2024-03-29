@@ -55,23 +55,27 @@ const Customer = () => {
   // Handler for applying filters
   const applyFilters = () => {
     // Validate filters
-    const errors = {};
+    const newErrors = {};
     if (!filters.startDate) {
-      errors.startDate = "Start date is required";
+      newErrors.startDate = "Start date is required";
     }
     if (!filters.endDate) {
-      errors.endDate = "End date is required";
+      newErrors.endDate = "End date is required";
     }
     if (
       filters.startDate &&
       filters.endDate &&
       new Date(filters.endDate) < new Date(filters.startDate)
     ) {
-      errors.endDate = "End date cannot be before start date";
+      newErrors.endDate = "End date cannot be before start date";
+    }
+    if (filters.capacity && (isNaN(filters.capacity) || filters.capacity < 1)) {
+      newErrors.capacity =
+        "Capacity must be a number greater than or equal to 1";
     }
     // Add more validation for other filters if needed
 
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(newErrors).length === 0) {
       // No errors, proceed with applying filters
       let filteredData = [...hotelData];
 
@@ -117,9 +121,10 @@ const Customer = () => {
 
       // Update filtered hotels state
       setFilteredHotels(filteredData);
+      setErrors({});
     } else {
       // Update errors state to display error messages
-      setErrors(errors);
+      setErrors(newErrors);
     }
   };
 
@@ -161,9 +166,74 @@ const Customer = () => {
         />
         {errors.endDate && <span className="error">{errors.endDate}</span>}
       </div>
-      {/* Other filter options (capacity, area, hotelChain, category, priceRange) */}
-      {/* Implement similar input/select elements for other filter options */}
-
+      <div className="filter-section">
+        <label>Capacity:</label>
+        <input
+          type="number"
+          value={filters.capacity}
+          min="1"
+          onChange={(e) => setFilters({ ...filters, capacity: e.target.value })}
+        />
+        {errors.capacity && <span className="error">{errors.capacity}</span>}
+      </div>
+      <div className="filter-section">
+        <label>Area:</label>
+        <select
+          value={filters.area}
+          onChange={(e) => setFilters({ ...filters, area: e.target.value })}
+        >
+          <option value="">Select Area</option>
+          <option value="City">City</option>
+          <option value="Beach">Beach</option>
+          <option value="Mountain">Mountain</option>
+          {/* Add more options as needed */}
+        </select>
+      </div>
+      <div className="filter-section">
+        <label>Hotel Chain:</label>
+        <select
+          value={filters.hotelChain}
+          onChange={(e) =>
+            setFilters({ ...filters, hotelChain: e.target.value })
+          }
+        >
+          <option value="">Select Hotel Chain</option>
+          <option value="Chain 1">Chain 1</option>
+          <option value="Chain 2">Chain 2</option>
+          <option value="Chain 3">Chain 3</option>
+          {/* Add more options as needed */}
+        </select>
+      </div>
+      <div className="filter-section">
+        <label>Category:</label>
+        <select
+          value={filters.category}
+          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+        >
+          <option value="">Select Category</option>
+          <option value="1-star">1-star</option>
+          <option value="2-star">2-star</option>
+          <option value="3-star">3-star</option>
+          <option value="4-star">4-star</option>
+          <option value="5-star">5-star</option>
+          {/* Add more options as needed */}
+        </select>
+      </div>
+      <div className="filter-section">
+        <label>Price Range:</label>
+        <select
+          value={filters.priceRange}
+          onChange={(e) =>
+            setFilters({ ...filters, priceRange: e.target.value })
+          }
+        >
+          <option value="">Select Price Range</option>
+          <option value="0-100">$0 - $100</option>
+          <option value="101-200">$101 - $200</option>
+          <option value="201-300">$201 - $300</option>
+          {/* Add more options as needed */}
+        </select>
+      </div>
       <button className="btn" onClick={applyFilters}>
         Apply Filters
       </button>
@@ -182,7 +252,7 @@ const Customer = () => {
           </ul>
         </div>
       ) : (
-        <p>No hotels match the selected criteria.</p>
+        <p>No hotels found.</p>
       )}
     </div>
   );
