@@ -11,6 +11,7 @@ const Search = () => {
       price: 100,
       hotelChain: "Chain 1",
       category: "3-star",
+      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
       name: "Hotel B",
@@ -19,6 +20,7 @@ const Search = () => {
       price: 150,
       hotelChain: "Chain 2",
       category: "4-star",
+      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
       name: "Hotel C",
@@ -27,6 +29,7 @@ const Search = () => {
       price: 120,
       hotelChain: "Chain 1",
       category: "2-star",
+      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
       name: "Hotel D",
@@ -35,6 +38,7 @@ const Search = () => {
       price: 200,
       hotelChain: "Chain 3",
       category: "5-star",
+      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     // Add more simulated hotel data as needed
   ];
@@ -51,6 +55,20 @@ const Search = () => {
   });
   const [filteredHotels, setFilteredHotels] = useState([]);
   const [errors, setErrors] = useState({});
+
+  const renderHotelCards = () => {
+    return (
+      <div className="hotel-cards">
+        {filteredHotels.map((hotel, index) => (
+          <div key={index} className="hotel-card">
+            <h3>{hotel.name}</h3>
+            <p>Capacity: {hotel.capacity}</p>
+            <p>Amenities: {hotel.amenities.join(", ")}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // Handler for applying filters
   const applyFilters = () => {
@@ -82,7 +100,7 @@ const Search = () => {
       // Filter by capacity
       if (filters.capacity) {
         filteredData = filteredData.filter(
-          (hotel) => hotel.capacity >= parseInt(filters.capacity)
+          (hotel) => hotel.capacity == parseInt(filters.capacity)
         );
       }
 
@@ -245,11 +263,18 @@ const Search = () => {
       {filteredHotels.length > 0 ? (
         <div>
           <h3>Available Hotels:</h3>
-          <ul>
+          <div>
+            {filteredHotels.length > 0 ? (
+              renderHotelCards()
+            ) : (
+              <p>No hotels found.</p>
+            )}
+          </div>
+          {/* <ul>
             {filteredHotels.map((hotel, index) => (
               <li key={index}>{hotel.name}</li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       ) : (
         <p>No hotels found.</p>

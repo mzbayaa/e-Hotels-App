@@ -57,3 +57,31 @@ ul {
 ul li {
   margin-bottom: 5px;
 }
+
+.customer-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hotel-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.hotel-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-card h3 {
+  margin-top: 0;
+}
+
+.hotel-card p {
+  margin: 5px 0;
+}
