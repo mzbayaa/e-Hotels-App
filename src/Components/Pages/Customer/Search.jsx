@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./Customer.css";
+import "./Search.css";
 
-const Customer = () => {
+const Search = () => {
   // Simulated hotel data
   const hotelData = [
     {
@@ -258,4 +258,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default Search;

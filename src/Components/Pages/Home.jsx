@@ -6,7 +6,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleCustomerClick = () => {
-    navigate("/customer");
+    navigate("/sign-up");
   };
 
   const handleEmployeeClick = () => {
