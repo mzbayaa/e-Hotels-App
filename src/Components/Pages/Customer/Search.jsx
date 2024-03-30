@@ -1,10 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Search.css";
 
 const Search = () => {
+  const navigate = useNavigate();
+
+  // Handler for navigating to booking page
+  const handleBookingClick = (hotelId) => {
+    navigate(`/booking/${hotelId}`);
+  };
+
   // Simulated hotel data
   const hotelData = [
     {
+      id: 1,
       name: "Hotel A",
       capacity: 2,
       area: "City",
@@ -14,6 +23,7 @@ const Search = () => {
       amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
+      id: 2,
       name: "Hotel B",
       capacity: 4,
       area: "Beach",
@@ -23,6 +33,7 @@ const Search = () => {
       amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
+      id: 3,
       name: "Hotel C",
       capacity: 2,
       area: "City",
@@ -32,6 +43,7 @@ const Search = () => {
       amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
     {
+      id: 4,
       name: "Hotel D",
       capacity: 6,
       area: "Mountain",
@@ -59,10 +71,18 @@ const Search = () => {
   const renderHotelCards = () => {
     return (
       <div className="hotel-cards">
-        {filteredHotels.map((hotel, index) => (
-          <div key={index} className="hotel-card">
+        {filteredHotels.map((hotel) => (
+          <div
+            key={hotel.id}
+            className="hotel-card"
+            onClick={handleBookingClick}
+          >
             <h3>{hotel.name}</h3>
+            <h4>{hotel.hotelChain}</h4>
             <p>Capacity: {hotel.capacity}</p>
+            <p>Rating: {hotel.category}</p>
+            <p>Area: {hotel.area}</p>
+            <p>Price: ${hotel.price}</p>
             <p>Amenities: {hotel.amenities.join(", ")}</p>
           </div>
         ))}
@@ -270,11 +290,6 @@ const Search = () => {
               <p>No hotels found.</p>
             )}
           </div>
-          {/* <ul>
-            {filteredHotels.map((hotel, index) => (
-              <li key={index}>{hotel.name}</li>
-            ))}
-          </ul> */}
         </div>
       ) : (
         <p>No hotels found.</p>
