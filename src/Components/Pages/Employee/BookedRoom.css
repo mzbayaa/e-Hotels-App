@@ -1,0 +1,54 @@
+.booked-room-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .room-card {
+    border: 2px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  
+  .room-card.selected {
+    border-color: blue;
+  }
+  
+  .room-card:hover {
+    border-color: blue;
+  }
+  
+  .button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .cancel-btn {
+    background-color: #007bff;
+  }
+  
+  .rent-btn {
+    background-color: #007bff;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+  }
+  

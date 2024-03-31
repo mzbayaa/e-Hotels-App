@@ -34,12 +34,13 @@ const Home = () => {
           Customer
         </button>
         <button
-          className="btn"
-          onClick={handleEmployeeClick}
-          aria-label="Employee"
-        >
-          Employee
-        </button>
+            type="submit"
+            className="btn"
+            aria-label="Log In"
+            onClick={() => navigate("/log-in")}
+          >
+            Employee
+          </button>
       </div>
     </div>
   );
