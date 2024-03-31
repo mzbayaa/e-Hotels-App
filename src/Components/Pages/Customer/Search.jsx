@@ -10,6 +10,24 @@ const Search = () => {
     navigate(`/booking/${hotelId}`);
   };
 
+  // Function to get the current date in the format YYYY-MM-DD
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    if (month < 10) {
+      month = `0${month}`; // Add leading zero if month is less than 10
+    }
+
+    if (day < 10) {
+      day = `0${day}`; // Add leading zero if day is less than 10
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
   // Simulated hotel data
   const hotelData = [
     {
@@ -75,7 +93,7 @@ const Search = () => {
           <div
             key={hotel.id}
             className="hotel-card"
-            onClick={handleBookingClick}
+            onClick={() => handleBookingClick(hotel.id)}
           >
             <h3>{hotel.name}</h3>
             <h4>{hotel.hotelChain}</h4>
@@ -189,6 +207,7 @@ const Search = () => {
         <input
           type="date"
           value={filters.startDate}
+          min={getCurrentDate()} // Set the minimum date to the current date
           onChange={(e) =>
             setFilters({ ...filters, startDate: e.target.value })
           }
@@ -200,6 +219,7 @@ const Search = () => {
         <input
           type="date"
           value={filters.endDate}
+          min={filters.startDate || getCurrentDate()} // Set the minimum date to the selected start date or the current date
           onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
         />
         {errors.endDate && <span className="error">{errors.endDate}</span>}

@@ -10,6 +10,10 @@ const Booking = () => {
     navigate("/payment");
   };
 
+  const handleBackClick = () => {
+    navigate("/search");
+  };
+
   // Retrieve the selected hotel details based on hotelId
   // You may fetch this data from an API or use context/state management
   const hotelDetails = {
@@ -30,6 +34,9 @@ const Booking = () => {
       <p>Address: {hotelDetails.address}</p>
       <button className="btn" onClick={handleBookClick}>
         Book
+      </button>
+      <button className="btn" onClick={handleBackClick}>
+        Back
       </button>
     </div>
   );
