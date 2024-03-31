@@ -9,8 +9,6 @@ END;
 //
 DELIMITER ;
 
-DELETE FROM hotel_chain WHERE Name='Sunrise Stay'
-
 -- Delete all rooms and employees associated that work at 
 DELIMITER //
 CREATE TRIGGER hotel_deleted
@@ -22,3 +20,16 @@ END;
 //
 DELIMITER ;
 
+-- Delete all employees and customers associated with a deleted person 
+DELIMITER //
+
+CREATE TRIGGER person_deleted
+AFTER DELETE ON person
+FOR EACH ROW
+BEGIN
+    DELETE FROM employee WHERE Person_ID = OLD.Person_ID;
+    DELETE FROM customer WHERE Person_ID = OLD.Person_ID;
+END;
+
+//
+DELIMITER ;
