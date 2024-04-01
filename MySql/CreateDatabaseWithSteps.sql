@@ -639,3 +639,6 @@ END;
 //
 DELIMITER ;
 
+-- 24 User Connection password
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+FLUSH PRIVILEGES;
