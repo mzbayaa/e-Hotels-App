@@ -22,8 +22,9 @@ db.connect((err) => {
 });
 
 app.use(cors());
+app.use(express.json());
 
-// Define your routes here
+// Return all hotels
 app.get("/hotels", (req, res) => {
     const query = "SELECT * FROM Hotel";
     db.query(query, (err, data) => {
@@ -34,6 +35,44 @@ app.get("/hotels", (req, res) => {
         res.json(data);
     });
 });
+
+// DELETE route for deleting a hotel
+app.delete("/hotels/:hotelId", (req, res) => {
+    const hotelId = req.params.hotelId;
+    const query = "DELETE FROM Hotel WHERE Hotel_ID = ?";
+    db.query(query, hotelId, (err, result) => {
+        if (err) {
+            console.error('Error deleting hotel:', err);
+            return res.status(500).json({ error: 'Error deleting hotel' });
+        }
+        res.json({ message: 'Hotel deleted successfully' });
+    });
+});
+
+// POST route for adding a new hotel
+app.post("/hotels", (req, res) => {
+    const newHotel = req.body;
+
+    // Check if all required fields are present
+    const requiredFields = ["Chain_Name", "Star_Rating", "Contact_Email", "Phone_Number", "Manager", "Street", "City", "Postal_Code", "Number_Of_Rooms"];
+    for (const field of requiredFields) {
+        if (!newHotel[field]) {
+            return res.status(400).json({ error: `Missing required field: ${field}` });
+        }
+    }
+
+    // Insert the new hotel into the database
+    const query = "INSERT INTO Hotel SET ?";
+    db.query(query, newHotel, (err, result) => {
+        if (err) {
+            console.error('Error adding hotel:', err);
+            return res.status(500).json({ error: 'Error adding hotel' });
+        }
+        newHotel.Hotel_ID = result.insertId;
+        res.json(newHotel);
+    });
+});
+
 
 app.get("/rooms", (req, res) => {
     const query = "SELECT * FROM Room";

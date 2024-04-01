@@ -33,7 +33,7 @@ const ProcessPayment = () => {
 
     if (Object.keys(newErrors).length === 0) {
       // No errors, proceed with payment
-      navigate(-1);
+      navigate("/confirmation");
     } else {
       // Update errors state to display error messages
       setErrors(newErrors);

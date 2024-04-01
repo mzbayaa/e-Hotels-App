@@ -22,11 +22,13 @@
   
   .form-group input[type="text"],
   .form-group input[type="password"] {
-    width: 100%;
+    width: calc(100% - 16px); /* Adjusting width to account for padding and borders */
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    display: block; /* Setting input boxes as block elements */
+    margin: 0 auto;
   }
   
   .error {
