@@ -11,7 +11,7 @@ export default function Confirmation() {
       <p className="message">
         We have succecufully received and confirmed your reservation request.{" "}
       </p>
-      <p>An email confirming your reservation will be sent to you shortly </p>
+      <p>An email confirming the reservation will be sent shortly </p>
       {/* <p>Booking Number: #{bookingId} </p> */}
       <p>Confirmation Number: #1111111 </p>
       <div className="button">
