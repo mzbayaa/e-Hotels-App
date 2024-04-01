@@ -13,7 +13,7 @@ const Payment = () => {
 
   const [errors, setErrors] = useState({});
 
-  const handlePayment = () => {
+  const handlePaymentClick = () => {
     const newErrors = {};
 
     // Validate card number
@@ -40,8 +40,8 @@ const Payment = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/search"); // Redirect to search page if payment is canceled
+  const handleBackClick = () => {
+    navigate(-1); // Redirect to search page if payment is canceled
   };
 
   return (
@@ -87,11 +87,11 @@ const Payment = () => {
           {errors.cvv && <span className="error">{errors.cvv}</span>}
         </div>
         <div className="payment-buttons">
-          <button className="btn" onClick={handlePayment}>
+          <button className="btn" onClick={handlePaymentClick}>
             Pay Now
           </button>
-          <button className="btn" onClick={handleCancel}>
-            Cancel
+          <button className="btn" onClick={handleBackClick}>
+            Back
           </button>
         </div>
       </div>

@@ -12,7 +12,7 @@ const Booking = () => {
   };
 
   const handleBackClick = () => {
-    navigate("/search");
+    navigate(-1);
   };
 
   // Retrieve the selected hotel details based on hotelId
@@ -37,8 +37,10 @@ const Booking = () => {
         <h3>{hotelDetails.hotelName}</h3>
         <h4>{hotelDetails.hotelChain}</h4>
         <p>Capacity: {hotelDetails.capacity}</p>
+        <p>Total Capacity: {"view"}</p>
         <p>Rating: {hotelDetails.category}</p>
         <p>Area: {hotelDetails.area}</p>
+        <p>Total Rooms Per Area: {"view"}</p>
         <p>Price: {hotelDetails.price}</p>
         <p>Amenities: {hotelDetails.amenities.join(", ")}</p>
         <p>Address: {hotelDetails.address}</p>

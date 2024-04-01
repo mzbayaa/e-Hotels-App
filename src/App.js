@@ -30,6 +30,7 @@ function App() {
         <Route path="/booking/:hotelId" element={<Booking />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/confirmation" element={<Confirmation />} />
+
         <Route path="/process-payment" element={<ProcessPayment />} />
         <Route path="/manage-hotels" element={<ManageHotels />} />
 
