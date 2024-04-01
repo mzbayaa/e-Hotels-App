@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // Function to get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -14,23 +14,20 @@ const SignUp = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // State to manage customer information and errors
   const [customerInfo, setCustomerInfo] = useState({
     firstName: "",
     lastName: "",
-    street: "", // Separate street variable
-    city: "", // Separate city variable
-    postalCode: "", // Separate postal code variable
+    street: "",
+    city: "",
+    postalCode: "",
     idType: "",
     idInfo: "",
-    registrationDate: getCurrentDate(), // Set initial value to current date
+    registrationDate: getCurrentDate(),
   });
   const [errors, setErrors] = useState({});
 
-  // Handler for form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate form fields
     const newErrors = {};
     if (!customerInfo.firstName) {
       newErrors.firstName = "First name is required";
@@ -53,18 +50,18 @@ const SignUp = () => {
     if (!customerInfo.idInfo) {
       newErrors.idInfo = `${customerInfo.idType} is required`;
     }
-    if (!customerInfo.registrationDate) {
-      newErrors.registrationDate = "Registration date is required";
-    }
-    setErrors(newErrors); // Update errors state
-    // Proceed with form submission if no errors
+    setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      console.log("Customer Info:", customerInfo);
-      navigate("/search"); // Navigate to search page
+      try {
+        await axios.post("/sign-up", customerInfo);
+        console.log("Sign up successful");
+        navigate("/search");
+      } catch (error) {
+        console.error("Error signing up:", error);
+      }
     }
   };
 
-  // Handler for changing ID type
   const handleIdTypeChange = (e) => {
     const idType = e.target.value;
     setCustomerInfo({ ...customerInfo, idType, idInfo: "" });
@@ -149,11 +146,9 @@ const SignUp = () => {
             <option value="SSN">SSN</option>
             <option value="SIN">SIN</option>
             <option value="Driver's License">Driver's License</option>
-            {/* Add more options as needed */}
           </select>
           {errors.idType && <span className="error">{errors.idType}</span>}
         </div>
-        {/* Render additional input field based on selected ID type */}
         {customerInfo.idType && (
           <div className="form-group">
             <label>{customerInfo.idType}:</label>
@@ -170,11 +165,7 @@ const SignUp = () => {
         )}
         <div className="form-group">
           <label>Registration Date:</label>
-          <input
-            type="text"
-            value={customerInfo.registrationDate}
-            readOnly // Make the input uneditable
-          />
+          <input type="text" value={customerInfo.registrationDate} readOnly />
         </div>
         <button type="submit" className="btn" aria-label="Sign up">
           Sign up
