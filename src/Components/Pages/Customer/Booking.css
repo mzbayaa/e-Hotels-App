@@ -1,0 +1,47 @@
+.booking-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.booking-details {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.booking-details h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.booking-details h3 {
+  font-size: 20px;
+  margin-top: 0;
+}
+
+.booking-details h4 {
+  font-size: 18px;
+}
+
+.booking-details p {
+  margin: 10px 0;
+}
+
+.booking-details button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+.booking-details button:hover {
+  background-color: #0056b3;
+}
