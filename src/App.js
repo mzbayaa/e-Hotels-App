@@ -1,18 +1,19 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./Components/Pages/Home";
-import Search from "./Components/Pages/Customer/Search";
-import SignUp from "./Components/Pages/Customer/SignUp";
-import LogIn from "./Components/Pages/Employee/LogIn";
-import Dashboard from "./Components/Pages/Employee/Dashboard";
-import BookedRoom from "./Components/Pages/Employee/BookedRoom";
-import BookRentRoom from "./Components/Pages/Employee/BookRentRoom";
-import Booking from "./Components/Pages/Customer/Booking";
-import Confirmation from "./Components/Pages/Customer/Confirmation";
-import Payment from "./Components/Pages/Customer/Payment";
-import ProcessPayment from "./Components/Pages/Employee/ProcessPayment";
-import ManageHotels from "./Components/Pages/Employee/ManageHotels";
+import Home from "./Components/Pages/Home.jsx";
+import Search from "./Components/Pages/Customer/Search.jsx";
+import SignUp from "./Components/Pages/Customer/SignUp.jsx";
+import LogIn from "./Components/Pages/Employee/LogIn.jsx";
+import Dashboard from "./Components/Pages/Employee/Dashboard.jsx";
+import BookedRoom from "./Components/Pages/Employee/BookedRoom.jsx";
+import BookRentRoom from "./Components/Pages/Employee/BookRentRoom.jsx";
+import Booking from "./Components/Pages/Customer/Booking.jsx";
+import Confirmation from "./Components/Pages/Customer/Confirmation.jsx";
+import Payment from "./Components/Pages/Customer/Payment.jsx";
+import ProcessPayment from "./Components/Pages/Employee/ProcessPayment.jsx";
+import ManageHotels from "./Components/Pages/Employee/ManageHotels.jsx";
+
 
 
 
