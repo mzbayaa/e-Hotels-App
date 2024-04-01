@@ -70,7 +70,6 @@ const Search = () => {
       category: "5-star",
       amenities: ["TV", "Air Conditioning", "Wi-Fi"],
     },
-    // Add more simulated hotel data as needed
   ];
 
   // State to manage filter values and errors
@@ -219,7 +218,7 @@ const Search = () => {
         <input
           type="date"
           value={filters.endDate}
-          min={filters.startDate || getCurrentDate()} // Set the minimum date to the selected start date or the current date
+          min={filters.startDate || getCurrentDate()}
           onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
         />
         {errors.endDate && <span className="error">{errors.endDate}</span>}
@@ -259,7 +258,6 @@ const Search = () => {
           <option value="Chain 1">Chain 1</option>
           <option value="Chain 2">Chain 2</option>
           <option value="Chain 3">Chain 3</option>
-          {/* Add more options as needed */}
         </select>
       </div>
       <div className="filter-section">
@@ -274,7 +272,6 @@ const Search = () => {
           <option value="3-star">3-star</option>
           <option value="4-star">4-star</option>
           <option value="5-star">5-star</option>
-          {/* Add more options as needed */}
         </select>
       </div>
       <div className="filter-section">
@@ -299,7 +296,6 @@ const Search = () => {
         Reset Filters
       </button>
 
-      {/* Display filtered hotels */}
       {filteredHotels.length > 0 ? (
         <div>
           <h3>Available Hotels:</h3>
@@ -318,4 +314,5 @@ const Search = () => {
   );
 };
 
+// export { hotelData };
 export default Search;
