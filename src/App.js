@@ -11,6 +11,9 @@ import BookRentRoom from "./Components/Pages/Employee/BookRentRoom";
 import Booking from "./Components/Pages/Customer/Booking";
 import Confirmation from "./Components/Pages/Customer/Confirmation";
 import Payment from "./Components/Pages/Customer/Payment";
+import ProcessPayment from "./Components/Pages/Employee/ProcessPayment";
+import ManageHotels from "./Components/Pages/Employee/ManageHotels";
+
 
 
 function App() {
@@ -27,6 +30,11 @@ function App() {
         <Route path="/booking/:hotelId" element={<Booking />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/confirmation" element={<Confirmation />} />
+
+        <Route path="/process-payment" element={<ProcessPayment />} />
+        <Route path="/manage-hotels" element={<ManageHotels />} />
+
+
       </Routes>
     </Router>
   );
