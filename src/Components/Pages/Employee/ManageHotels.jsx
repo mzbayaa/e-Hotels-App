@@ -6,7 +6,6 @@ import "./ManageHotels.css";
 const ManageHotels = () => {
   const [hotels, setHotels] = useState([]);
   const [selectedHotel, setSelectedHotel] = useState(null);
-  const [selectedHotelRooms, setSelectedHotelRooms] = useState([]);
   const [showRoomPopup, setShowRoomPopup] = useState(false);
   const [showAddHotelPopup, setShowAddHotelPopup] = useState(false);
   const [newHotelData, setNewHotelData] = useState({
@@ -50,10 +49,6 @@ const ManageHotels = () => {
 
   const navigate = useNavigate();
 
-  const handleShowRooms = (rooms) => {
-    setSelectedHotelRooms(rooms);
-    setShowRoomPopup(true);
-  };
 
   const handleCloseRoomPopup = () => {
     setShowRoomPopup(false);
@@ -174,9 +169,7 @@ const ManageHotels = () => {
             <p>Street: {hotel.Street}</p>
             <p>Postal Code: {hotel.Postal_Code}</p>
             <p>Number of Rooms: {hotel.Number_Of_Rooms}</p>
-            <button className="btn" onClick={() => handleShowRooms(hotel.rooms)}>
-              Manage Rooms
-            </button>
+
           </div>
         ))}
       </div>
@@ -188,15 +181,7 @@ const ManageHotels = () => {
             <button className="btn" onClick={handleCloseRoomPopup}>
               Close
             </button>
-            <div className="room-list">
-              {selectedHotelRooms.map((room, index) => (
-                <div key={index} className="room-card">
-                  <h4>{room.name}</h4>
-                  <p>Availability: {room.availability}</p>
-                  <p>Price: ${room.price}</p>
-                </div>
-              ))}
-            </div>
+            
           </div>
         </div>
       )}

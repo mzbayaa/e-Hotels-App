@@ -58,14 +58,17 @@ const Dashboard = () => {
   };
 
   const handleRoomSelect = (roomId) => {
-    setSelectedRoom(selectedRoom === roomId ? null : roomId);
+    setSelectedRoom(roomId);
   };
 
-  const handleDeleteRoom = async (roomId) => {
+  const handleDeleteRoom = async () => {
     try {
-      await axios.delete(`http://localhost:3001/rooms/${roomId}`);
-      const updatedFilteredRooms = filteredRooms.filter((room) => room.Room_ID !== roomId);
-      setFilteredRooms(updatedFilteredRooms);
+      if (selectedRoom) {
+        await axios.delete(`http://localhost:3001/rooms/${selectedRoom}`);
+        const updatedFilteredRooms = filteredRooms.filter((room) => room.Room_ID !== selectedRoom);
+        setFilteredRooms(updatedFilteredRooms);
+        setSelectedRoom(null); // Clear selected room after deletion
+      }
     } catch (error) {
       console.error("Error deleting room:", error);
     }
@@ -112,18 +115,18 @@ const Dashboard = () => {
     setNewRoomData({ ...newRoomData, [name]: value, hotelIdTouched: true });
   };
 
+  const isValidHotelId = (hotelId) => {
+    return hotels.some((hotel) => hotel.Hotel_ID === parseInt(hotelId));
+  };
+
   const navigateToNextPage = () => {
     if (selectedRoom !== null) {
       navigate("/book-rent-room", { state: { selectedRoom } });
     }
   };
 
-  const handleManageHotels = () => {
+  const navigateToManageHotels = () => {
     navigate("/manage-hotels");
-  };
-
-  const isValidHotelId = (hotelId) => {
-    return hotels.some((hotel) => hotel.Hotel_ID === parseInt(hotelId));
   };
 
   return (
@@ -141,12 +144,16 @@ const Dashboard = () => {
         Apply Filter
       </button>
 
-      <button className="btn" onClick={handleManageHotels}>
-        Manage Hotels
-      </button>
-
       <button className="btn" onClick={handleAddRoom}>
         Add Room
+      </button>
+
+      <button className="btn delete-btn" onClick={handleDeleteRoom} disabled={!selectedRoom}>
+        Delete Room
+      </button>
+
+      <button className="btn" onClick={navigateToManageHotels}>
+        Manage Hotels
       </button>
 
       <button className="btn" onClick={navigateToNextPage} disabled={selectedRoom === null}>
@@ -166,9 +173,6 @@ const Dashboard = () => {
             <p>View: {room.View_Type}</p>
             <p>Capacity: {room.Capacity}</p>
             <p>Amenities: {room.Amenities}</p>
-            <button className="delete-btn" onClick={() => handleDeleteRoom(room.Room_ID)}>
-              Delete
-            </button>
           </div>
         ))}
       </div>
