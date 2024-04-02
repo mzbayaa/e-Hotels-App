@@ -1,55 +1,54 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./Booking.css";
 
 const Booking = () => {
-  const { hotelId } = useParams();
-
+  const { roomId } = useParams(); // Assuming roomId is part of your route '/booking/:roomId'
   const navigate = useNavigate();
+  const location = useLocation();
+  const roomDetails = location.state ? location.state.roomDetails : null;
 
   const handleBookClick = () => {
-    navigate("/payment");
+    // Assuming you want to pass the roomDetails to the payment page as well
+    navigate("/payment", { state: { roomDetails } });
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate(-1); // Go back to the previous page
   };
 
-  // Retrieve the selected hotel details based on hotelId
-  // You may fetch this data from an API or use context/state management
-  const hotelDetails = {
-    id: 1,
-    hotelName: "Hotel A",
-    hotelChain: "Hotel Chain",
-    capacity: 2,
-    category: "3-star",
-    area: "City",
-    price: 100,
-    amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    address: "123 Main St, City, Country",
-    // Add more hotel details as needed
-  };
+  if (!roomDetails) {
+    // Handling direct navigation to the booking page or refresh scenarios
+    return (
+      <div className="booking-container">
+        <h2>Room details are not available</h2>
+        <p>Please select a room from the search page.</p>
+        <button className="btn" onClick={() => navigate("/")}>
+          Go to Search
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="booking-container">
       <h2>Booking Page</h2>
       <div className="booking-details">
-        <h3>{hotelDetails.hotelName}</h3>
-        <h4>{hotelDetails.hotelChain}</h4>
-        <p>Capacity: {hotelDetails.capacity}</p>
-        <p>Total Capacity: {"view"}</p>
-        <p>Rating: {hotelDetails.category}</p>
-        <p>Area: {hotelDetails.area}</p>
-        <p>Total Rooms Per Area: {"view"}</p>
-        <p>Price: {hotelDetails.price}</p>
-        <p>Amenities: {hotelDetails.amenities.join(", ")}</p>
-        <p>Address: {hotelDetails.address}</p>
-        <button className="btn" onClick={handleBookClick}>
-          Book
-        </button>
-        <button className="btn" onClick={handleBackClick}>
-          Back
-        </button>
+        <h3>{roomDetails.Chain_Name} - Room {roomDetails.Room_ID}</h3>
+        <p>Price: ${roomDetails.Price}</p>
+        <p>Capacity: {roomDetails.Capacity}</p>
+        <p>Area: {roomDetails.City}</p>
+        <p>Rating: {roomDetails.Star_Rating} stars</p>
+        <p>Amenities: {roomDetails.Amenities}</p>
+        {/* Add more room details as needed */}
+        <div className="booking-buttons">
+          <button className="btn" onClick={handleBookClick}>
+            Book Now
+          </button>
+          <button className="btn" onClick={handleBackClick}>
+            Back
+          </button>
+        </div>
       </div>
     </div>
   );

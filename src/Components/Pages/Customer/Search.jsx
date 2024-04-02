@@ -59,8 +59,8 @@ const Search = () => {
     }
   }, [fetchAvailableRooms, filters.startDate, filters.endDate]);
 
-  const handleBookingClick = (roomId) => {
-    navigate(`/booking/${roomId}`);
+  const handleBookingClick = (room) => {
+    navigate(`/booking/${room.Room_ID}`, { state: { roomDetails: room } });
   };
 
   const handleFilterChange = (e) => {
@@ -89,7 +89,7 @@ const Search = () => {
     return availableRooms.length > 0 ? (
       <div className="hotel-cards">
         {availableRooms.map((room) => (
-          <div key={room.Room_ID} className="hotel-card" onClick={() => handleBookingClick(room.Room_ID)}>
+          <div key={room.Room_ID} className="hotel-card" onClick={() => handleBookingClick(room)}>
             <h3>{room.Chain_Name} - Room {room.Room_ID}</h3>
             <p>Price: ${room.Price}</p>
             <p>Capacity: {room.Capacity}</p>
