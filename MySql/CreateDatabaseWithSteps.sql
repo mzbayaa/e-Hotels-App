@@ -713,3 +713,6 @@ UPDATE Employee SET First_Name='Neil', Last_Name='Young', Street='404 Harvest Mo
 UPDATE Employee SET First_Name='Patsy', Last_Name='Cline', Street='505 Crazy Ave', City='Winchester', Postal_Code='22601' WHERE Employee_ID = 41;
 UPDATE Employee SET First_Name='Quentin', Last_Name='Tarantino', Street='606 Pulp Fiction Ln', City='Knoxville', Postal_Code='37901' WHERE Employee_ID = 42;
 
+-- 27 Alter Customer Table
+ALTER TABLE customer
+ADD COLUMN ID_Type VARCHAR(20);
