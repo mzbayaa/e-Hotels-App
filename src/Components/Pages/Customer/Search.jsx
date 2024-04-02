@@ -274,5 +274,4 @@ const Search = () => {
   );
 };
 
-// export { hotelData };
 export default Search;

@@ -53,7 +53,7 @@ const SignUp = () => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       try {
-        await axios.post("/sign-up", customerInfo);
+        await axios.post("/customer", customerInfo);
         console.log("Sign up successful");
         navigate("/search");
       } catch (error) {

@@ -39,18 +39,6 @@ app.get("/hotels", (req, res) => {
   });
 });
 
-// Endpoint to fetch person data
-app.get("/person", (req, res) => {
-  const query = "SELECT * FROM Person";
-  db.query(query, (err, data) => {
-    if (err) {
-      console.error("Error fetching person data:", err);
-      return res.status(500).json({ error: "Error fetching person data" });
-    }
-    res.json(data);
-  });
-});
-
 // Endpoint to fetch room data
 app.get("/rooms", (req, res) => {
   const query = "SELECT * FROM Room";
@@ -63,45 +51,51 @@ app.get("/rooms", (req, res) => {
   });
 });
 
-// Endpoint to handle sign up
-app.post("/sign-up", (req, res) => {
-  const {
-    firstName,
-    lastName,
-    street,
-    city,
-    postalCode,
-    idType,
-    idInfo,
-    registrationDate,
-  } = req.body;
-
-  const query = `
-    INSERT INTO Person (First_Name, Last_Name, Street, City, Postal_Code, ID_Type, ID_Info, Registration_Date)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(
-    query,
-    [
-      firstName,
-      lastName,
-      street,
-      city,
-      postalCode,
-      idType,
-      idInfo,
-      registrationDate,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Error signing up:", err);
-        return res.status(500).json({ error: "Error signing up" });
-      }
-      console.log("Customer signed up successfully");
-      res.status(201).json({ message: "Customer signed up successfully" });
+// New endpoint to fetch the Customer table
+app.get("/customer", (req, res) => {
+  const query = "SELECT * FROM Customer";
+  db.query(query, (err, data) => {
+    if (err) {
+      console.error("Error fetching Customer table:", err);
+      return res.status(500).json({ error: "Error fetching Customer table" });
     }
-  );
+    res.json(data);
+  });
+});
+
+// POST route for adding a new customer
+app.post("/customer", (req, res) => {
+  const newCustomer = req.body;
+
+  // Check if all required fields are present
+  const requiredFields = [
+    "Customer_ID",
+    "Registration_Date",
+    "First_Name",
+    "Last_Name",
+    "Street",
+    "City",
+    "Postal_Code",
+    "Security_ID",
+  ];
+  for (const field of requiredFields) {
+    if (!newCustomer[field]) {
+      return res
+        .status(400)
+        .json({ error: `Missing required field: ${field}` });
+    }
+  }
+
+  // Insert the new customer into the database
+  const query = "INSERT INTO Customer SET ?";
+  db.query(query, newCustomer, (err, result) => {
+    if (err) {
+      console.error("Error adding customer:", err);
+      return res.status(500).json({ error: "Error adding customer" });
+    }
+    newCustomer.Customer_ID = result.insertId;
+    res.json(newCustomer);
+  });
 });
 
 app.listen(port, () => {
