@@ -46,6 +46,18 @@ app.get("/rooms", (req, res) => {
     });
 });
 
+app.get("/available-rooms", (req, res) => {
+    const query = "SELECT * FROM Room WHERE booked = 0";
+    db.query(query, (err, rooms) => {
+        if (err) {
+            console.error('Error fetching available rooms:', err);
+            return res.status(500).json({ error: 'Error fetching available rooms' });
+        }
+        res.json(rooms);
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
