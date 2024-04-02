@@ -6,6 +6,7 @@ import "./Dashboard.css";
 const Dashboard = () => {
   const [filter, setFilter] = useState("all");
   const [filteredRooms, setFilteredRooms] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
   const [newRoomData, setNewRoomData] = useState({
@@ -13,6 +14,8 @@ const Dashboard = () => {
     amenities: "",
     view: "",
     capacity: 0,
+    hotelId: "", // Add hotelId to newRoomData
+    hotelIdTouched: false // Track whether the hotelId input has been touched
   });
   const navigate = useNavigate();
 
@@ -31,6 +34,19 @@ const Dashboard = () => {
     };
 
     fetchRooms();
+  }, []);
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/hotels");
+        setHotels(response.data);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+
+    fetchHotels();
   }, []);
 
   const applyFilter = () => {
@@ -66,7 +82,14 @@ const Dashboard = () => {
   const handleSaveRoom = async () => {
     try {
       console.log("Saving room:", newRoomData);
-      const response = await axios.post("http://localhost:3001/rooms", newRoomData);
+      const response = await axios.post("http://localhost:3001/rooms", {
+        Price: newRoomData.price,
+        Capacity: newRoomData.capacity,
+        View_Type: newRoomData.view,
+        Amenities: newRoomData.amenities,
+        booked: 0,
+        Hotel_ID: newRoomData.hotelId // Assign the selected Hotel_ID
+      });
       console.log("Room saved successfully:", response.data);
       const newRoom = { ...response.data, availability: "available" };
       setFilteredRooms([...filteredRooms, newRoom]);
@@ -75,6 +98,8 @@ const Dashboard = () => {
         amenities: "",
         view: "",
         capacity: 0,
+        hotelId: "", // Reset hotelId after saving
+        hotelIdTouched: false // Reset hotelIdTouched after saving
       });
       setShowAddRoomPopup(false);
     } catch (error) {
@@ -84,7 +109,7 @@ const Dashboard = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRoomData({ ...newRoomData, [name]: value });
+    setNewRoomData({ ...newRoomData, [name]: value, hotelIdTouched: true });
   };
 
   const navigateToNextPage = () => {
@@ -95,6 +120,10 @@ const Dashboard = () => {
 
   const handleManageHotels = () => {
     navigate("/manage-hotels");
+  };
+
+  const isValidHotelId = (hotelId) => {
+    return hotels.some((hotel) => hotel.Hotel_ID === parseInt(hotelId));
   };
 
   return (
@@ -149,6 +178,18 @@ const Dashboard = () => {
           <div className="popup">
             <h3>Add Room</h3>
 
+            <label>Hotel ID:</label>
+            <input
+              type="number"
+              name="hotelId"
+              value={newRoomData.hotelId}
+              onChange={handleInputChange}
+            />
+
+            {newRoomData.hotelIdTouched && !isValidHotelId(newRoomData.hotelId) && (
+              <p style={{ color: 'red' }}>Invalid Hotel ID</p>
+            )}
+
             <label>Price:</label>
             <input
               type="number"
@@ -156,6 +197,7 @@ const Dashboard = () => {
               value={newRoomData.price}
               onChange={handleInputChange}
             />
+
             <label>Amenities:</label>
             <input
               type="text"
@@ -163,6 +205,7 @@ const Dashboard = () => {
               value={newRoomData.amenities}
               onChange={handleInputChange}
             />
+
             <label>View:</label>
             <input
               type="text"
@@ -170,6 +213,7 @@ const Dashboard = () => {
               value={newRoomData.view}
               onChange={handleInputChange}
             />
+
             <label>Capacity:</label>
             <input
               type="number"
@@ -177,8 +221,9 @@ const Dashboard = () => {
               value={newRoomData.capacity}
               onChange={handleInputChange}
             />
+
             <div>
-              <button className="btn" onClick={handleSaveRoom}>
+              <button className="btn" onClick={handleSaveRoom} disabled={!isValidHotelId(newRoomData.hotelId)}>
                 Save
               </button>
               <button className="btn" onClick={handlePopupClose}>

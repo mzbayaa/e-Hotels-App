@@ -101,36 +101,33 @@ app.post("/hotels", (req, res) => {
 
 // POST route for adding a new room
 app.post("/rooms", (req, res) => {
-  const newRoom = req.body;
-
-  // Check if all required fields are present
-  const requiredFields = ["Price", "Capacity", "View_Type", "Amenities"];
-  for (const field of requiredFields) {
+    const newRoom = req.body;
+  
+    // Check if all required fields are present
+    const requiredFields = ["Hotel_ID", "Price", "Capacity", "View_Type", "Amenities"];
+    for (const field of requiredFields) {
       if (!newRoom[field]) {
-          return res.status(400).json({ error: `Missing required field: ${field}` });
+        return res.status(400).json({ error: `Missing required field: ${field}` });
       }
-  }
-
-  // Set booked to 0 by default if not provided
-  if (newRoom.booked === undefined) {
+    }
+  
+    // Set booked to 0 by default if not provided
+    if (newRoom.booked === undefined) {
       newRoom.booked = 0;
-  }
-
-  // Generate a random Hotel_ID between 1 and 50
-  newRoom.Hotel_ID = Math.floor(Math.random() * 50) + 1;
-
-  // Insert the new room into the database
-  const query = "INSERT INTO Room SET ?";
-  db.query(query, newRoom, (err, result) => {
+    }
+  
+    // Insert the new room into the database
+    const query = "INSERT INTO Room SET ?";
+    db.query(query, newRoom, (err, result) => {
       if (err) {
-          console.error('Error adding room:', err);
-          return res.status(500).json({ error: 'Error adding room' });
+        console.error('Error adding room:', err);
+        return res.status(500).json({ error: 'Error adding room' });
       }
       newRoom.Room_ID = result.insertId;
       res.json(newRoom);
+    });
   });
-});
-
+  
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
