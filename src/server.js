@@ -69,7 +69,7 @@ app.post("/customer", (req, res) => {
 
   // Check if all required fields are present
   const requiredFields = [
-    "Customer_ID",
+    // "Customer_ID",
     "Registration_Date",
     "First_Name",
     "Last_Name",
@@ -77,6 +77,7 @@ app.post("/customer", (req, res) => {
     "City",
     "Postal_Code",
     "Security_ID",
+    "ID_Type",
   ];
   for (const field of requiredFields) {
     if (!newCustomer[field]) {
