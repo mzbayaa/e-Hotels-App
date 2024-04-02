@@ -600,7 +600,7 @@ CREATE INDEX idx_hotel_chain_name ON hotel_chain(Name);
 
 CREATE INDEX idx_hotel_id ON hotel(Hotel_ID);
 
-CREATE INDEX idx_booking_dates ON bookings(Check_In_Date, Check_Out_Date);
+CREATE INDEX idx_booking_dates ON booking(Check_In_Date, Check_Out_Date);
 
 -- 23 Create Triggers
 -- Delete all hotel chains associated with hotel chain if hotel chain was deleted
@@ -642,3 +642,74 @@ DELIMITER ;
 -- 24 User Connection password
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 FLUSH PRIVILEGES;
+
+-- 25 Alter Person, Customer, Employee
+ALTER TABLE Customer DROP FOREIGN KEY Customer_ibfk_1;
+ALTER TABLE Employee DROP FOREIGN KEY Employee_ibfk_1;
+
+ALTER TABLE Customer ADD COLUMN First_Name VARCHAR(255) NOT NULL,
+                           ADD COLUMN Last_Name VARCHAR(255) NOT NULL,
+                           ADD COLUMN Street VARCHAR(255),
+                           ADD COLUMN City VARCHAR(100),
+                           ADD COLUMN Postal_Code VARCHAR(20);
+
+ALTER TABLE Employee ADD COLUMN First_Name VARCHAR(255) NOT NULL,
+                          ADD COLUMN Last_Name VARCHAR(255) NOT NULL,
+                          ADD COLUMN Street VARCHAR(255),
+                          ADD COLUMN City VARCHAR(100),
+                          ADD COLUMN Postal_Code VARCHAR(20);
+
+DROP TABLE Person;
+
+ALTER TABLE Customer ADD COLUMN Security_ID VARCHAR(36);
+
+alter table customer
+DROP COLUMN Person_ID;
+
+alter table employee
+DROP COLUMN Person_ID;
+
+-- 26 Alter Employee Table
+UPDATE Employee SET First_Name='Alice', Last_Name='Johnson', Street='101 Casino Blvd', City='Las Vegas', Postal_Code='89109' WHERE Employee_ID = 1;
+UPDATE Employee SET First_Name='Bob', Last_Name='Marley', Street='103 Reggae Street', City='Miami', Postal_Code='33101' WHERE Employee_ID = 2;
+UPDATE Employee SET First_Name='Carol', Last_Name='King', Street='202 Tapestry Lane', City='Los Angeles', Postal_Code='90001' WHERE Employee_ID = 3;
+UPDATE Employee SET First_Name='Dave', Last_Name='Brubeck', Street='304 Jazz Ave', City='San Francisco', Postal_Code='94102' WHERE Employee_ID = 4;
+UPDATE Employee SET First_Name='Elton', Last_Name='John', Street='405 Rocket Man Rd', City='New York', Postal_Code='10001' WHERE Employee_ID = 5;
+UPDATE Employee SET First_Name='Frank', Last_Name='Sinatra', Street='506 Blue Eyes Way', City='Hoboken', Postal_Code='07030' WHERE Employee_ID = 6;
+UPDATE Employee SET First_Name='Gloria', Last_Name='Gaynor', Street='707 Survivor St', City='Newark', Postal_Code='07101' WHERE Employee_ID = 7;
+UPDATE Employee SET First_Name='Harry', Last_Name='Connick Jr', Street='808 Crooner Ct', City='New Orleans', Postal_Code='70112' WHERE Employee_ID = 8;
+UPDATE Employee SET First_Name='Isaac', Last_Name='Hayes', Street='909 Shaft St', City='Memphis', Postal_Code='38103' WHERE Employee_ID = 9;
+UPDATE Employee SET First_Name='Joni', Last_Name='Mitchell', Street='101 Big Yellow Taxi Ln', City='Seattle', Postal_Code='98101' WHERE Employee_ID = 10;
+UPDATE Employee SET First_Name='Kenny', Last_Name='Loggins', Street='202 Danger Zone Rd', City='Los Angeles', Postal_Code='90002' WHERE Employee_ID = 11;
+UPDATE Employee SET First_Name='Linda', Last_Name='Ronstadt', Street='303 Desperado Drive', City='Tucson', Postal_Code='85701' WHERE Employee_ID = 12;
+UPDATE Employee SET First_Name='Michael', Last_Name='McDonald', Street='404 Yacht Club Way', City='St. Louis', Postal_Code='63101' WHERE Employee_ID = 13;
+UPDATE Employee SET First_Name='Nina', Last_Name='Simone', Street='505 High Priestess Ln', City='Baltimore', Postal_Code='21201' WHERE Employee_ID = 14;
+UPDATE Employee SET First_Name='Otis', Last_Name='Redding', Street='606 Dock of the Bay', City='Macon', Postal_Code='31201' WHERE Employee_ID = 15;
+UPDATE Employee SET First_Name='Patti', Last_Name='LaBelle', Street='707 Lady Marmalade Dr', City='Philadelphia', Postal_Code='19101' WHERE Employee_ID = 16;
+UPDATE Employee SET First_Name='Quincy', Last_Name='Jones', Street='808 Q St', City='Chicago', Postal_Code='60601' WHERE Employee_ID = 17;
+UPDATE Employee SET First_Name='Ray', Last_Name='Charles', Street='909 Georgia on My Mind Ave', City='Albany', Postal_Code='31701' WHERE Employee_ID = 18;
+UPDATE Employee SET First_Name='Sara', Last_Name='Bareilles', Street='101 Brave Ln', City='Eureka', Postal_Code='95501' WHERE Employee_ID = 19;
+UPDATE Employee SET First_Name='Tony', Last_Name='Bennett', Street='202 Left My Heart St', City='San Francisco', Postal_Code='94109' WHERE Employee_ID = 20;
+UPDATE Employee SET First_Name='Usher', City='Atlanta', Street='', Postal_Code='30301' WHERE Employee_ID = 21;
+UPDATE Employee SET First_Name='Vince', Last_Name='Gill', Street='404 Guitar St', City='Nashville', Postal_Code='37201' WHERE Employee_ID = 22;
+UPDATE Employee SET First_Name='Willie', Last_Name='Nelson', Street='505 On the Road Again Ave', City='Austin', Postal_Code='78701' WHERE Employee_ID = 23;
+UPDATE Employee SET First_Name='Xavier', Last_Name='Rudd', Street='606 Spirit Bird Ln', City='Asheville', Postal_Code='28801' WHERE Employee_ID = 24;
+UPDATE Employee SET First_Name='Yolanda', Last_Name='Adams', Street='707 Gospel Queen Quay', City='Houston', Postal_Code='77001' WHERE Employee_ID = 25;
+UPDATE Employee SET First_Name='Zac', Last_Name='Brown', Street='808 Chicken Fried Rd', City='Atlanta', Postal_Code='30302' WHERE Employee_ID = 26;
+UPDATE Employee SET First_Name='Aaron', Last_Name='Neville', Street='909 Tell It Like It Is Terrace', City='New Orleans', Postal_Code='70115' WHERE Employee_ID = 27;
+UPDATE Employee SET First_Name='Britney', Last_Name='Spears', Street='101 Pop Princess Path', City='Kentwood', Postal_Code='70444' WHERE Employee_ID = 28;
+UPDATE Employee SET First_Name='Carlos', Last_Name='Santana', Street='202 Smooth Ave', City='San Francisco', Postal_Code='94110' WHERE Employee_ID = 29;
+UPDATE Employee SET First_Name='Diana', Last_Name='Krall', Street='303 Jazz Pianist Pl', City='Nanaimo', Postal_Code='V9R 1E3' WHERE Employee_ID = 30;
+UPDATE Employee SET First_Name='Elvis', Last_Name='Costello', Street='404 Watching the Detectives', City='London', Postal_Code='EC3A 1' WHERE Employee_ID = 31;
+UPDATE Employee SET First_Name='Fiona', Last_Name='Apple', Street='505 Criminal Way', City='New York', Postal_Code='10003' WHERE Employee_ID = 32;
+UPDATE Employee SET First_Name='Glen', Last_Name='Campbell', Street='606 Rhinestone Cowboy Rd', City='Delight', Postal_Code='71940' WHERE Employee_ID = 33;
+UPDATE Employee SET First_Name='Hank', Last_Name='Williams', Street='707 Lost Highway', City='Montgomery', Postal_Code='36101' WHERE Employee_ID = 34;
+UPDATE Employee SET First_Name='Iris', Last_Name='DeMent', Street='808 Our Town Rd', City='Paragould', Postal_Code='72450' WHERE Employee_ID = 35;
+UPDATE Employee SET First_Name='Johnny', Last_Name='Cash', Street='909 Man in Black Blvd', City='Kingsland', Postal_Code='71652' WHERE Employee_ID = 36;
+UPDATE Employee SET First_Name='Kacey', Last_Name='Musgraves', Street='101 Golden Hour St', City='Mineola', Postal_Code='75773' WHERE Employee_ID = 37;
+UPDATE Employee SET First_Name='Lyle', Last_Name='Lovett', Street='202 Large Band Blvd', City='Klein', Postal_Code='77379' WHERE Employee_ID = 38;
+UPDATE Employee SET First_Name='Margo', Last_Name='Price', Street='303 Midwest Farmer\'s Daughter Dr', City='Aledo', Postal_Code='61231' WHERE Employee_ID = 39;
+UPDATE Employee SET First_Name='Neil', Last_Name='Young', Street='404 Harvest Moon Ave', City='Toronto', Postal_Code='M4B 1B3' WHERE Employee_ID = 40;
+UPDATE Employee SET First_Name='Patsy', Last_Name='Cline', Street='505 Crazy Ave', City='Winchester', Postal_Code='22601' WHERE Employee_ID = 41;
+UPDATE Employee SET First_Name='Quentin', Last_Name='Tarantino', Street='606 Pulp Fiction Ln', City='Knoxville', Postal_Code='37901' WHERE Employee_ID = 42;
+
