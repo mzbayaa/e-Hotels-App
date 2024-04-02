@@ -110,6 +110,18 @@ app.get("/areas", (req, res) => {
     });
 });
 
+app.get('/hotel-chains', (req, res) => {
+    const query = 'SELECT DISTINCT Chain_Name FROM Hotel ORDER BY Chain_Name;';
+    db.query(query, (err, result) => {
+        if (err) {
+            console.error('Error fetching hotel chains:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        // Extract chain names and send them as an array
+        const chains = result.map(row => row.Chain_Name);
+        res.json(chains);
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

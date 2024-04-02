@@ -17,6 +17,8 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [areas, setAreas] = useState([]);
+  const [hotelChains, setHotelChains] = useState([]);
+
 
   const fetchAvailableRooms = useCallback(async () => {
     setIsLoading(true);
@@ -35,18 +37,23 @@ const Search = () => {
   }, [filters]);
 
   useEffect(() => {
-    const fetchAreas = async () => {
+    const fetchAreasAndChains = async () => {
       try {
-        const response = await fetch("http://localhost:3001/areas");
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        setAreas(data); // Use the fetched data directly
+        const areasResponse = await fetch("http://localhost:3001/areas");
+        if (!areasResponse.ok) throw new Error('Network response was not ok for areas');
+        const areasData = await areasResponse.json();
+        setAreas(areasData);
+
+        const chainsResponse = await fetch("http://localhost:3001/hotel-chains");
+        if (!chainsResponse.ok) throw new Error('Network response was not ok for hotel chains');
+        const chainsData = await chainsResponse.json();
+        setHotelChains(chainsData); // Assuming the API returns an array of hotel chain names
       } catch (error) {
-        console.error('Error fetching areas:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchAreas();
+    fetchAreasAndChains();
     if (filters.startDate && filters.endDate) {
       fetchAvailableRooms();
     }
@@ -146,13 +153,14 @@ const Search = () => {
         </select>
       </div>
 
+      {/* Hotel Chain dropdown */}
       <div className="filter-section">
         <label>Hotel Chain:</label>
         <select name="hotelChain" value={filters.hotelChain} onChange={handleFilterChange}>
           <option value="">Select Hotel Chain</option>
-          <option value="Chain 1">Chain 1</option>
-          <option value="Chain 2">Chain 2</option>
-          <option value="Chain 3">Chain 3</option>
+          {hotelChains.map((chain, index) => (
+            <option key={index} value={chain}>{chain}</option>
+          ))}
         </select>
       </div>
 
