@@ -1,78 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Search.css";
 
 const Search = () => {
   const navigate = useNavigate();
-
-  // Handler for navigating to booking page
-  const handleBookingClick = (hotelId) => {
-    navigate(`/booking/${hotelId}`);
-  };
-
-  // Function to get the current date in the format YYYY-MM-DD
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
-
-    if (month < 10) {
-      month = `0${month}`; // Add leading zero if month is less than 10
-    }
-
-    if (day < 10) {
-      day = `0${day}`; // Add leading zero if day is less than 10
-    }
-
-    return `${year}-${month}-${day}`;
-  };
-
-  // Simulated hotel data
-  const hotelData = [
-    {
-      id: 1,
-      name: "Hotel A",
-      capacity: 2,
-      area: "City",
-      price: 100,
-      hotelChain: "Chain 1",
-      category: "3-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 2,
-      name: "Hotel B",
-      capacity: 4,
-      area: "Beach",
-      price: 150,
-      hotelChain: "Chain 2",
-      category: "4-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 3,
-      name: "Hotel C",
-      capacity: 2,
-      area: "City",
-      price: 120,
-      hotelChain: "Chain 1",
-      category: "2-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 4,
-      name: "Hotel D",
-      capacity: 6,
-      area: "Mountain",
-      price: 200,
-      hotelChain: "Chain 3",
-      category: "5-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-  ];
-
-  // State to manage filter values and errors
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -82,108 +13,59 @@ const Search = () => {
     category: "",
     priceRange: "",
   });
-  const [filteredHotels, setFilteredHotels] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [areas, setAreas] = useState([]);
 
-  const renderHotelCards = () => {
-    return (
-      <div className="hotel-cards">
-        {filteredHotels.map((hotel) => (
-          <div
-            key={hotel.id}
-            className="hotel-card"
-            onClick={() => handleBookingClick(hotel.id)}
-          >
-            <h3>{hotel.name}</h3>
-            <h4>{hotel.hotelChain}</h4>
-            <p>Capacity: {hotel.capacity}</p>
-            <p>Rating: {hotel.category}</p>
-            <p>Area: {hotel.area}</p>
-            <p>Price: ${hotel.price}</p>
-            <p>Amenities: {hotel.amenities.join(", ")}</p>
-          </div>
-        ))}
-      </div>
-    );
+  const fetchAvailableRooms = useCallback(async () => {
+    setIsLoading(true);
+    let query = new URLSearchParams(filters).toString();
+    try {
+      const response = await fetch(`http://localhost:3001/available-rooms?${query}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setAvailableRooms(data);
+    } catch (error) {
+      console.error('Error:', error);
+      setErrors({ ...errors, fetch: 'Failed to fetch available rooms.' });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/areas");
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setAreas(data.map(area => area.name)); // Assuming your area objects have a 'name' property
+      } catch (error) {
+        console.error('Error fetching areas:', error);
+      }
+    };
+
+    fetchAreas();
+    if (filters.startDate && filters.endDate) {
+      fetchAvailableRooms();
+    }
+  }, [fetchAvailableRooms, filters.startDate, filters.endDate]);
+  
+
+  const handleBookingClick = (roomId) => {
+    navigate(`/booking/${roomId}`);
   };
 
-  // Handler for applying filters
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
+  };
+
   const applyFilters = () => {
-    // Validate filters
-    const newErrors = {};
-    if (!filters.startDate) {
-      newErrors.startDate = "Start date is required";
-    }
-    if (!filters.endDate) {
-      newErrors.endDate = "End date is required";
-    }
-    if (
-      filters.startDate &&
-      filters.endDate &&
-      new Date(filters.endDate) < new Date(filters.startDate)
-    ) {
-      newErrors.endDate = "End date cannot be before start date";
-    }
-    if (filters.capacity && (isNaN(filters.capacity) || filters.capacity < 1)) {
-      newErrors.capacity =
-        "Capacity must be a number greater than or equal to 1";
-    }
-    // Add more validation for other filters if needed
-
-    if (Object.keys(newErrors).length === 0) {
-      // No errors, proceed with applying filters
-      let filteredData = [...hotelData];
-
-      // Filter by capacity
-      if (filters.capacity) {
-        filteredData = filteredData.filter(
-          (hotel) => hotel.capacity == parseInt(filters.capacity)
-        );
-      }
-
-      // Filter by area
-      if (filters.area) {
-        filteredData = filteredData.filter(
-          (hotel) => hotel.area.toLowerCase() === filters.area.toLowerCase()
-        );
-      }
-
-      // Filter by hotel chain
-      if (filters.hotelChain) {
-        filteredData = filteredData.filter(
-          (hotel) =>
-            hotel.hotelChain.toLowerCase() === filters.hotelChain.toLowerCase()
-        );
-      }
-
-      // Filter by category
-      if (filters.category) {
-        filteredData = filteredData.filter(
-          (hotel) =>
-            hotel.category.toLowerCase() === filters.category.toLowerCase()
-        );
-      }
-
-      // Filter by price range
-      if (filters.priceRange) {
-        const [minPrice, maxPrice] = filters.priceRange.split("-");
-        filteredData = filteredData.filter(
-          (hotel) =>
-            hotel.price >= parseInt(minPrice) &&
-            hotel.price <= parseInt(maxPrice)
-        );
-      }
-
-      // Update filtered hotels state
-      setFilteredHotels(filteredData);
-      setErrors({});
-    } else {
-      // Update errors state to display error messages
-      setErrors(newErrors);
-    }
+    fetchAvailableRooms();
   };
 
-  // Handler for resetting filters
   const resetFilters = () => {
     setFilters({
       startDate: "",
@@ -194,78 +76,90 @@ const Search = () => {
       category: "",
       priceRange: "",
     });
-    setFilteredHotels([]);
-    setErrors({});
+  };
+
+  const renderRoomCards = () => {
+    if (isLoading) return <p>Loading rooms...</p>;
+    return availableRooms.length > 0 ? (
+      <div className="hotel-cards">
+        {availableRooms.map((room) => (
+          <div key={room.Room_ID} className="hotel-card" onClick={() => handleBookingClick(room.Room_ID)}>
+            <h3>{room.Chain_Name} - Room {room.Room_ID}</h3>
+            <p>Price: ${room.Price}</p>
+            <p>Capacity: {room.Capacity}</p>
+            <p>Area: {room.City}</p>
+            <p>Rating: {room.Star_Rating} stars</p>
+            <p>Amenities: {room.Amenities}</p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>No rooms found. Adjust your filters and try again.</p>
+    );
   };
 
   return (
     <div className="customer-container">
-      <h2>Find Your Perfect Hotel</h2>
+      <h2>Find Your Perfect Room</h2>
+
+      {/* Filter inputs */}
       <div className="filter-section">
         <label>Start Date:</label>
         <input
           type="date"
+          name="startDate"
           value={filters.startDate}
-          min={getCurrentDate()} // Set the minimum date to the current date
-          onChange={(e) =>
-            setFilters({ ...filters, startDate: e.target.value })
-          }
+          min={new Date().toISOString().split("T")[0]}
+          onChange={handleFilterChange}
         />
-        {errors.startDate && <span className="error">{errors.startDate}</span>}
       </div>
+
       <div className="filter-section">
         <label>End Date:</label>
         <input
           type="date"
+          name="endDate"
           value={filters.endDate}
-          min={filters.startDate || getCurrentDate()}
-          onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+          min={filters.startDate || new Date().toISOString().split("T")[0]}
+          onChange={handleFilterChange}
         />
-        {errors.endDate && <span className="error">{errors.endDate}</span>}
       </div>
+
       <div className="filter-section">
         <label>Capacity:</label>
         <input
           type="number"
+          name="capacity"
           value={filters.capacity}
           min="1"
-          onChange={(e) => setFilters({ ...filters, capacity: e.target.value })}
+          onChange={handleFilterChange}
         />
-        {errors.capacity && <span className="error">{errors.capacity}</span>}
       </div>
+
+      {/* Updated Area dropdown to use fetched areas */}
       <div className="filter-section">
         <label>Area:</label>
-        <select
-          value={filters.area}
-          onChange={(e) => setFilters({ ...filters, area: e.target.value })}
-        >
+        <select name="area" value={filters.area} onChange={handleFilterChange}>
           <option value="">Select Area</option>
-          <option value="City">City</option>
-          <option value="Beach">Beach</option>
-          <option value="Mountain">Mountain</option>
-          {/* Add more options as needed */}
+          {areas.map((area, index) => (
+            <option key={index} value={area}>{area}</option>
+          ))}
         </select>
       </div>
+
       <div className="filter-section">
         <label>Hotel Chain:</label>
-        <select
-          value={filters.hotelChain}
-          onChange={(e) =>
-            setFilters({ ...filters, hotelChain: e.target.value })
-          }
-        >
+        <select name="hotelChain" value={filters.hotelChain} onChange={handleFilterChange}>
           <option value="">Select Hotel Chain</option>
           <option value="Chain 1">Chain 1</option>
           <option value="Chain 2">Chain 2</option>
           <option value="Chain 3">Chain 3</option>
         </select>
       </div>
+
       <div className="filter-section">
         <label>Category:</label>
-        <select
-          value={filters.category}
-          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-        >
+        <select name="category" value={filters.category} onChange={handleFilterChange}>
           <option value="">Select Category</option>
           <option value="1-star">1-star</option>
           <option value="2-star">2-star</option>
@@ -274,45 +168,23 @@ const Search = () => {
           <option value="5-star">5-star</option>
         </select>
       </div>
+
       <div className="filter-section">
         <label>Price Range:</label>
-        <select
-          value={filters.priceRange}
-          onChange={(e) =>
-            setFilters({ ...filters, priceRange: e.target.value })
-          }
-        >
+        <select name="priceRange" value={filters.priceRange} onChange={handleFilterChange}>
           <option value="">Select Price Range</option>
           <option value="0-100">$0 - $100</option>
           <option value="101-200">$101 - $200</option>
           <option value="201-300">$201 - $300</option>
-          {/* Add more options as needed */}
         </select>
       </div>
-      <button className="btn" onClick={applyFilters}>
-        Apply Filters
-      </button>
-      <button className="btn" onClick={resetFilters}>
-        Reset Filters
-      </button>
 
-      {filteredHotels.length > 0 ? (
-        <div>
-          <h3>Available Hotels:</h3>
-          <div>
-            {filteredHotels.length > 0 ? (
-              renderHotelCards()
-            ) : (
-              <p>No hotels found.</p>
-            )}
-          </div>
-        </div>
-      ) : (
-        <p>No hotels found.</p>
-      )}
+      <button className="btn" onClick={applyFilters}>Apply Filters</button>
+      <button className="btn" onClick={resetFilters}>Reset Filters</button>
+
+      {renderRoomCards()}
     </div>
   );
 };
 
-// export { hotelData };
 export default Search;
