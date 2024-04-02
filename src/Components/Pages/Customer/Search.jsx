@@ -40,7 +40,7 @@ const Search = () => {
         const response = await fetch("http://localhost:3001/areas");
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        setAreas(data.map(area => area.name)); // Assuming your area objects have a 'name' property
+        setAreas(data); // Use the fetched data directly
       } catch (error) {
         console.error('Error fetching areas:', error);
       }
@@ -51,7 +51,6 @@ const Search = () => {
       fetchAvailableRooms();
     }
   }, [fetchAvailableRooms, filters.startDate, filters.endDate]);
-  
 
   const handleBookingClick = (roomId) => {
     navigate(`/booking/${roomId}`);
