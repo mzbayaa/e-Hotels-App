@@ -740,3 +740,4 @@ DROP FOREIGN KEY `archive_ibfk_3`;
 ALTER TABLE `ehotels`.`archive` 
 DROP INDEX `Renting_ID` ;
 
+ALTER TABLE Archive MODIFY COLUMN Booking_ID INT NULL;
