@@ -713,3 +713,22 @@ UPDATE Employee SET First_Name='Neil', Last_Name='Young', Street='404 Harvest Mo
 UPDATE Employee SET First_Name='Patsy', Last_Name='Cline', Street='505 Crazy Ave', City='Winchester', Postal_Code='22601' WHERE Employee_ID = 41;
 UPDATE Employee SET First_Name='Quentin', Last_Name='Tarantino', Street='606 Pulp Fiction Ln', City='Knoxville', Postal_Code='37901' WHERE Employee_ID = 42;
 
+-- 27 Alter booking table
+ALTER TABLE `ehotels`.`booking` 
+DROP COLUMN `Date_Of_Stay`;
+
+ALTER TABLE `ehotels`.`booking` 
+DROP FOREIGN KEY `booking_ibfk_1`;
+
+ALTER TABLE `ehotels`.`booking` 
+DROP INDEX `Customer_ID` ;
+
+ALTER TABLE ehotels.booking DROP COLUMN Customer_ID;
+
+-- 27 Alter archive table
+ALTER TABLE `ehotels`.`archive` 
+DROP FOREIGN KEY `archive_ibfk_2`;
+ALTER TABLE `ehotels`.`archive` 
+DROP INDEX `Customer_ID` ;
+
+ALTER TABLE ehotels.archive DROP COLUMN Customer_ID;

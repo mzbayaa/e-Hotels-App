@@ -47,7 +47,7 @@ const Search = () => {
         const chainsResponse = await fetch("http://localhost:3001/hotel-chains");
         if (!chainsResponse.ok) throw new Error('Network response was not ok for hotel chains');
         const chainsData = await chainsResponse.json();
-        setHotelChains(chainsData); // Assuming the API returns an array of hotel chain names
+        setHotelChains(chainsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -60,7 +60,15 @@ const Search = () => {
   }, [fetchAvailableRooms, filters.startDate, filters.endDate]);
 
   const handleBookingClick = (room) => {
-    navigate(`/booking/${room.Room_ID}`, { state: { roomDetails: room } });
+    navigate(`/booking/${room.Room_ID}`, {
+      state: { 
+        roomDetails: {
+          ...room,
+          checkInDate: filters.startDate,
+          checkOutDate: filters.endDate,
+        }
+      }
+    });
   };
 
   const handleFilterChange = (e) => {

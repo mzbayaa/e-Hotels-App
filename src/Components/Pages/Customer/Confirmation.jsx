@@ -1,19 +1,23 @@
 import React from "react";
 import "./Confirmation.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Confirmation() {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+ 
+  const bookingId = location.state ? location.state.bookingId : "Unavailable";
 
   return (
     <div className="page">
       <h1 className="header">Booking Confirmed!</h1>
       <p className="message">
-        We have succecufully received and confirmed your reservation request.{" "}
+        We have successfully received and confirmed your reservation request.
       </p>
-      <p>An email confirming your reservation will be sent to you shortly </p>
-      {/* <p>Booking Number: #{bookingId} </p> */}
-      <p>Booking Number: #1111111 </p>
+      <p>An email confirming your reservation will be sent to you shortly.</p>
+      {/* Displaying the dynamic booking number */}
+      <p>Booking Number: #{bookingId}</p>
       <div className="button">
         <button
           className="btn btn-success"

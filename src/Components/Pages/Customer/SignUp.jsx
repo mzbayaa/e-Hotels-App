@@ -5,7 +5,7 @@ import "./SignUp.css";
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // Function to get current date in YYYY-MM-DD format
+  
   const getCurrentDate = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -14,23 +14,23 @@ const SignUp = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // State to manage customer information and errors
+  
   const [customerInfo, setCustomerInfo] = useState({
     firstName: "",
     lastName: "",
-    street: "", // Separate street variable
-    city: "", // Separate city variable
-    postalCode: "", // Separate postal code variable
+    street: "",
+    city: "",
+    postalCode: "",
     idType: "",
     idInfo: "",
-    registrationDate: getCurrentDate(), // Set initial value to current date
+    registrationDate: getCurrentDate(),
   });
   const [errors, setErrors] = useState({});
 
-  // Handler for form submission
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validate form fields
+
     const newErrors = {};
     if (!customerInfo.firstName) {
       newErrors.firstName = "First name is required";
@@ -56,15 +56,15 @@ const SignUp = () => {
     if (!customerInfo.registrationDate) {
       newErrors.registrationDate = "Registration date is required";
     }
-    setErrors(newErrors); // Update errors state
-    // Proceed with form submission if no errors
+    setErrors(newErrors);
+ 
     if (Object.keys(newErrors).length === 0) {
-      console.log("Customer Info:", customerInfo);
-      navigate("/search"); // Navigate to search page
-    }
+      localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+      navigate("/search"); 
+    }    
   };
 
-  // Handler for changing ID type
+
   const handleIdTypeChange = (e) => {
     const idType = e.target.value;
     setCustomerInfo({ ...customerInfo, idType, idInfo: "" });
@@ -173,7 +173,7 @@ const SignUp = () => {
           <input
             type="text"
             value={customerInfo.registrationDate}
-            readOnly // Make the input uneditable
+            readOnly
           />
         </div>
         <button type="submit" className="btn" aria-label="Sign up">

@@ -3,22 +3,22 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./Booking.css";
 
 const Booking = () => {
-  const { roomId } = useParams(); // Assuming roomId is part of your route '/booking/:roomId'
+  const { roomId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const roomDetails = location.state ? location.state.roomDetails : null;
 
   const handleBookClick = () => {
-    // Assuming you want to pass the roomDetails to the payment page as well
-    navigate("/payment", { state: { roomDetails } });
-  };
+    const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
+    navigate("/payment", { state: { roomDetails, customerInfo } });
+  };  
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1); 
   };
 
   if (!roomDetails) {
-    // Handling direct navigation to the booking page or refresh scenarios
+    
     return (
       <div className="booking-container">
         <h2>Room details are not available</h2>
