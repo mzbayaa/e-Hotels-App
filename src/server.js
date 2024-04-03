@@ -258,6 +258,11 @@ app.get("/rented-rooms", (req, res) => {
     }
     if (data.length === 0) {
       return res.status(404).json({ error: 'Rooms not found' });
+    }
+    res.json(data);
+  });
+}); // This closes the /rented-rooms route properly
+
 
 // Endpoint to fetch room data
 app.get("/rooms", (req, res) => {
@@ -301,15 +306,16 @@ app.post('/archive', (req, res) => {
 
 // Deleting a hotel
 app.delete("/hotels/:hotelId", (req, res) => {
-    const hotelId = req.params.hotelId;
-    const query = "DELETE FROM Hotel WHERE Hotel_ID = ?";
-    db.query(query, hotelId, (err, result) => {
-        if (err) {
-            console.error('Error deleting hotel:', err);
-            return res.status(500).json({ error: 'Error deleting hotel' });
-        }
-        res.json({ message: 'Hotel deleted successfully' });
-    });
+  const hotelId = req.params.hotelId;
+  const query = "DELETE FROM Hotel WHERE Hotel_ID = ?";
+  db.query(query, hotelId, (err, result) => {
+      if (err) {
+          console.error('Error deleting hotel:', err);
+          return res.status(500).json({ error: 'Error deleting hotel' });
+      }
+      res.json({ message: 'Hotel deleted successfully' });
+  });
+}); // Correctly closed the delete hotel route handler
 
 // POST route for adding a new customer
 app.post("/customer", (req, res) => {
