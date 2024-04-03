@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Search.css";
 
 const Search = () => {
   const navigate = useNavigate();
+  const [hotelData, setHotelData] = useState([]);
+  const [filteredHotels, setFilteredHotels] = useState([]);
+  const [filters, setFilters] = useState([]);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    // Fetch hotel data from the server
+    axios
+      .get("http://localhost:3001/hotels")
+      .then((response) => {
+        setHotelData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching hotels:", error);
+      });
+  }, []); // Empty dependency array ensures the effect runs only once
 
   // Handler for navigating to booking page
   const handleBookingClick = (hotelId) => {
@@ -27,63 +44,6 @@ const Search = () => {
 
     return `${year}-${month}-${day}`;
   };
-
-  // Simulated hotel data
-  const hotelData = [
-    {
-      id: 1,
-      name: "Hotel A",
-      capacity: 2,
-      area: "City",
-      price: 100,
-      hotelChain: "Chain 1",
-      category: "3-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 2,
-      name: "Hotel B",
-      capacity: 4,
-      area: "Beach",
-      price: 150,
-      hotelChain: "Chain 2",
-      category: "4-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 3,
-      name: "Hotel C",
-      capacity: 2,
-      area: "City",
-      price: 120,
-      hotelChain: "Chain 1",
-      category: "2-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-    {
-      id: 4,
-      name: "Hotel D",
-      capacity: 6,
-      area: "Mountain",
-      price: 200,
-      hotelChain: "Chain 3",
-      category: "5-star",
-      amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    },
-  ];
-
-  // State to manage filter values and errors
-  const [filters, setFilters] = useState({
-    startDate: "",
-    endDate: "",
-    capacity: "",
-    area: "",
-    hotelChain: "",
-    category: "",
-    priceRange: "",
-  });
-  const [filteredHotels, setFilteredHotels] = useState([]);
-  const [errors, setErrors] = useState({});
 
   const renderHotelCards = () => {
     return (
@@ -314,5 +274,4 @@ const Search = () => {
   );
 };
 
-// export { hotelData };
 export default Search;
