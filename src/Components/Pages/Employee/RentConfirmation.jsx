@@ -19,6 +19,7 @@ export default function Confirmation({ selectedRoom }) {
         // Convert nextRentingId to a string and pad it with leading zeros
         const formattedConfirmationNumber = String(nextRentingId).padStart(6, '0');
         setConfirmationNumber(formattedConfirmationNumber);
+        await axios.post("http://localhost:3001/archive", { rentingId: formattedConfirmationNumber });
     } catch (error) {
       console.error("Error fetching confirmation number:", error);
     
