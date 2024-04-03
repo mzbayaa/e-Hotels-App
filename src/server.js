@@ -1,6 +1,7 @@
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
+import axios from "axios"; // Import axios for making HTTP requests
 
 const app = express();
 
@@ -47,6 +48,67 @@ app.get("/rooms", (req, res) => {
       res.json(data);
   });
 });
+
+// Return all archives
+app.get("/archive", (req, res) => {
+  const query = "SELECT * FROM Archive";
+  db.query(query, (err, data) => {
+      if (err) {
+          console.error('Error fetching archives:', err);
+          return res.status(500).json({ error: 'Error fetching archives' });
+      }
+      res.json(data);
+  });
+});
+
+// PUT route for updating room booking status
+app.put("/rooms/:roomId", (req, res) => {
+  const roomId = req.params.roomId;
+  const { availability, booked } = req.body;
+
+  // Update the room's booking status
+  const query = "UPDATE Room SET  booked = ? WHERE Room_ID = ?";
+  db.query(query, [ booked, roomId], (err, result) => {
+    if (err) {
+      console.error('Error updating room booking status:', err);
+      return res.status(500).json({ error: 'Error updating room booking status' });
+    }
+    res.json({ message: 'Room booking status updated successfully' });
+  });
+});
+
+// Return a specific room by ID
+app.get("/rooms/:roomId", (req, res) => {
+    const roomId = req.params.roomId;
+    const query = "SELECT * FROM Room WHERE Room_ID = ?";
+    db.query(query, roomId, (err, data) => {
+      if (err) {
+        console.error('Error fetching room:', err);
+        return res.status(500).json({ error: 'Error fetching room' });
+      }
+      if (data.length === 0) {
+        return res.status(404).json({ error: 'Room not found' });
+      }
+      res.json(data[0]);
+    });
+  });
+ 
+ // get rented rooms 
+app.get("/rented-rooms", (req, res) => {
+  const query = "SELECT * FROM Room WHERE booked = 2";
+  db.query(query, (err, data) => {
+    if (err) {
+      console.error('Error fetching room:', err);
+      return res.status(500).json({ error: 'Error fetching room' });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ error: 'Rooms not found' });
+    }
+    res.json(data);
+  });
+});
+
+
 
 // Deleting a hotel
 app.delete("/hotels/:hotelId", (req, res) => {

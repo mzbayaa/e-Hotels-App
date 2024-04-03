@@ -7,6 +7,7 @@ const Dashboard = () => {
   const [filter, setFilter] = useState("all");
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [hotels, setHotels] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
   const [newRoomData, setNewRoomData] = useState({
@@ -27,7 +28,8 @@ const Dashboard = () => {
           const availability = room.booked === 0 ? "available" : room.booked === 1 ? "booked" : "rented";
           return { ...room, availability };
         });
-        setFilteredRooms(roomsWithAvailability);
+        setRooms(roomsWithAvailability);
+        setFilteredRooms(roomsWithAvailability); // Initialize filteredRooms with all rooms
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }
@@ -35,6 +37,20 @@ const Dashboard = () => {
 
     fetchRooms();
   }, []);
+
+  const applyFilter = () => {
+    let filteredData = [];
+    if (filter === "all") {
+      filteredData = rooms;
+    } else {
+      if (filter === "available") {
+        filteredData = rooms.filter((room) => room.availability === "available");
+      } else if (filter === "booked") {
+        filteredData = rooms.filter((room) => room.availability === "booked");
+      }
+    }
+    setFilteredRooms(filteredData);
+  };
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -49,13 +65,8 @@ const Dashboard = () => {
     fetchHotels();
   }, []);
 
-  const applyFilter = () => {
-    const filteredData =
-      filter === "all"
-        ? filteredRooms
-        : filteredRooms.filter((room) => room.availability === filter);
-    setFilteredRooms(filteredData);
-  };
+  
+  
 
   const handleRoomSelect = (roomId) => {
     setSelectedRoom(roomId);
@@ -120,8 +131,12 @@ const Dashboard = () => {
   };
 
   const navigateToNextPage = () => {
-    if (selectedRoom !== null) {
+    const room = filteredRooms.find(room => room.Room_ID === selectedRoom);
+    if (room && room.availability === "available") {
       navigate("/book-rent-room", { state: { selectedRoom } });
+    }
+    if (room && room.availability === "booked") {
+      navigate("/booked-room", { state: { selectedRoom } });
     }
   };
 

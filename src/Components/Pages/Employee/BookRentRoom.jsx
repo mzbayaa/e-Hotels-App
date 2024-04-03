@@ -16,57 +16,56 @@ const BookRentRoom = () => {
         setSelectedRoomData(response.data);
       } catch (error) {
         console.error("Error fetching room data:", error);
-        // Navigate back to the dashboard if there's an error fetching room data
-        navigate(-1);
       }
     };
 
     fetchRoomData();
-  }, [selectedRoom, navigate]);
+  }, [selectedRoom]);
 
   const handleBookRoom = async () => {
     try {
-      // Add your logic for booking the room here
-      // For demonstration purposes, let's just change the availability status
-      await axios.put(`http://localhost:3001/rooms/${selectedRoom}`, { availability: "booked" });
-      navigate(-1); // Navigate back to the previous page (dashboard)
+      if (selectedRoomData && selectedRoomData.booked === 0) {
+        // Update the room's availability to "booked" and set booked attribute to 1
+        await axios.put(`http://localhost:3001/rooms/${selectedRoom}`, { availability: "booked", booked: 1 });
+        navigate(-1); 
+      } else {
+        console.log("Room is not available for booking.");
+      }
     } catch (error) {
       console.error("Error booking room:", error);
     }
   };
 
   const handleRentRoom = () => {
-    // Add your logic for renting the room here
-    navigate("/process-payment"); // Navigate to the process payment page
+    navigate("/process-payment", { state: { selectedRoom } });
   };
-
-  if (!selectedRoomData) {
-    // Render loading indicator while fetching room data
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="book-rent-page-container">
-      <h2>Book Room for Rent</h2>
-      <div className="booking-details">
-        <h3>{selectedRoomData.name}</h3>
-        <p>Availability: {selectedRoomData.availability}</p>
-        <p>Price: ${selectedRoomData.price}</p>
-        <p>View: {selectedRoomData.view}</p>
-        <p>Capacity: {selectedRoomData.capacity}</p>
-        <p>Amenities: {selectedRoomData.amenities.join(", ")}</p>
-        <div className="buttons-container">
-          <button className="btn" onClick={handleBookRoom}>
-            Book Room
-          </button>
-          <button className="btn" onClick={handleRentRoom}>
-            Rent Room
-          </button>
-          <button className="btn" onClick={() => navigate(-1)}>
-            Back
-          </button>
+      <h2>Book or Rent Room</h2>
+      {selectedRoomData && (
+        <div className="booking-details">
+          <div className="room-card selected">
+            <h3>{selectedRoomData.Room_Name}</h3>
+            <p>Availability: {selectedRoomData.booked === 0 ? "available" : "not available"}</p>
+            <p>Price: ${selectedRoomData.Price}</p>
+            <p>View: {selectedRoomData.View_Type}</p>
+            <p>Capacity: {selectedRoomData.Capacity}</p>
+            <p>Amenities: {selectedRoomData.Amenities}</p>
+          </div>
+          <div className="buttons-container">
+            <button className="btn" onClick={handleBookRoom}>
+              Book Room
+            </button>
+            <button className="btn" onClick={handleRentRoom}>
+              Rent Room
+            </button>
+            <button className="btn" onClick={() => navigate(-1)}>
+              Back
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

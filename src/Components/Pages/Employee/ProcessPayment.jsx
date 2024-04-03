@@ -1,9 +1,27 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import "./ProcessPayment.css";
 
-const ProcessPayment = () => {
+const ProcessPayment = (  ) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { selectedRoom } = location.state;
+  const [selectedRoomData, setSelectedRoomData] = useState(null);
+
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/rooms/${selectedRoom}`);
+        setSelectedRoomData(response.data);
+      } catch (error) {
+        console.error("Error fetching room data:", error);
+      }
+    };
+
+    fetchRoomData();
+  }, [selectedRoom]);
+
 
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
@@ -13,32 +31,41 @@ const ProcessPayment = () => {
 
   const [errors, setErrors] = useState({});
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     const newErrors = {};
-
+  
     // Validate card number
     if (!paymentInfo.cardNumber || paymentInfo.cardNumber.length !== 16) {
       newErrors.cardNumber = "Card number must be 16 digits";
     }
-
+  
     // Validate cardholder name
     if (!paymentInfo.cardName) {
       newErrors.cardName = "Cardholder name is required";
     }
-
+  
     // Validate CVV
     if (!paymentInfo.cvv || paymentInfo.cvv.length !== 3) {
       newErrors.cvv = "CVV must be 3 digits";
     }
-
+  
     if (Object.keys(newErrors).length === 0) {
-      // No errors, proceed with payment
-      navigate("/confirmation");
+      try {
+        if (selectedRoomData && (selectedRoomData.booked === 0 || selectedRoomData.booked === 1)) {
+          // Update the room's availability to "rented" and set booked attribute to 2
+          await axios.put(`http://localhost:3001/rooms/${selectedRoom}`, { availability: "rented", booked: 2 });
+          navigate("/rent-confirmation"); 
+        
+        }
+      } catch (error) {
+        console.error("Error updating room:", error);
+      }
     } else {
       // Update errors state to display error messages
       setErrors(newErrors);
     }
   };
+  
 
   const handleCancel = () => {
     // Define the logic for canceling payment here
@@ -95,6 +122,7 @@ const ProcessPayment = () => {
             Cancel
           </button>
         </div>
+        {errors.server && <div className="error">{errors.server}</div>}
       </div>
     </div>
   );
