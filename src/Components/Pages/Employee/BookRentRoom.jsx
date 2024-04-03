@@ -1,58 +1,71 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { roomData } from "./Dashboard";
+import axios from "axios";
 import "./BookRentRoom.css";
 
 const BookRentRoom = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedRoom } = location.state;
+  const [selectedRoomData, setSelectedRoomData] = useState(null);
 
-  // Find the selected room
-  const selectedRoomIndex = roomData.findIndex((room) => room.id === selectedRoom);
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/rooms/${selectedRoom}`);
+        setSelectedRoomData(response.data);
+      } catch (error) {
+        console.error("Error fetching room data:", error);
+      }
+    };
 
-  if (selectedRoomIndex === -1 || roomData[selectedRoomIndex].availability !== "available") {
-    // If the selected room is not found or not available, navigate back to the dashboard
-    navigate(-1);
-    return null; // Return null to prevent rendering anything
-  }
+    fetchRoomData();
+  }, [selectedRoom]);
 
-  const handleBookRoom = () => {
-    // Add your logic for booking the room here
-    // For demonstration purposes, let's just change the availability status
-    roomData[selectedRoomIndex].availability = "booked";
-    navigate(-1); // Navigate back to the previous page (dashboard)
+  const handleBookRoom = async () => {
+    try {
+      if (selectedRoomData && selectedRoomData.booked === 0) {
+        // Update the room's availability to "booked" and set booked attribute to 1
+        await axios.put(`http://localhost:3001/rooms/${selectedRoom}`, { availability: "booked", booked: 1 });
+        navigate(-1); 
+      } else {
+        console.log("Room is not available for booking.");
+      }
+    } catch (error) {
+      console.error("Error booking room:", error);
+    }
   };
 
   const handleRentRoom = () => {
-    // Add your logic for renting the room here
-    navigate("/process-payment"); // Navigate to the process payment page
+    navigate("/process-payment", { state: { selectedRoom } });
   };
-
-  const selectedRoomData = roomData[selectedRoomIndex];
 
   return (
     <div className="book-rent-page-container">
-      <h2>Book Room for Rent</h2>
-      <div className="booking-details">
-        <h3>{selectedRoomData.name}</h3>
-        <p>Availability: {selectedRoomData.availability}</p>
-        <p>Price: ${selectedRoomData.price}</p>
-        <p>View: {selectedRoomData.view}</p>
-        <p>Capacity: {selectedRoomData.capacity}</p>
-        <p>Amenities: {selectedRoomData.amenities.join(", ")}</p>
-        <div className="buttons-container">
-          <button className="btn" onClick={handleBookRoom}>
-            Book Room
-          </button>
-          <button className="btn" onClick={handleRentRoom}>
-            Rent Room
-          </button>
-          <button className="btn" onClick={() => navigate(-1)}>
-            Back
-          </button>
+      <h2>Book or Rent Room</h2>
+      {selectedRoomData && (
+        <div className="booking-details">
+          <div className="room-card selected">
+            <h3>{selectedRoomData.Room_Name}</h3>
+            <p>Availability: {selectedRoomData.booked === 0 ? "available" : "not available"}</p>
+            <p>Price: ${selectedRoomData.Price}</p>
+            <p>View: {selectedRoomData.View_Type}</p>
+            <p>Capacity: {selectedRoomData.Capacity}</p>
+            <p>Amenities: {selectedRoomData.Amenities}</p>
+          </div>
+          <div className="buttons-container">
+            <button className="btn" onClick={handleBookRoom}>
+              Book Room
+            </button>
+            <button className="btn" onClick={handleRentRoom}>
+              Rent Room
+            </button>
+            <button className="btn" onClick={() => navigate(-1)}>
+              Back
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -13,6 +13,8 @@ import Confirmation from "./Components/Pages/Customer/Confirmation.jsx";
 import Payment from "./Components/Pages/Customer/Payment.jsx";
 import ProcessPayment from "./Components/Pages/Employee/ProcessPayment.jsx";
 import ManageHotels from "./Components/Pages/Employee/ManageHotels.jsx";
+import RentConfirmation from "./Components/Pages/Employee/RentConfirmation.jsx";
+
 
 
 
@@ -31,9 +33,9 @@ function App() {
         <Route path="/booking/:hotelId" element={<Booking />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/confirmation" element={<Confirmation />} />
-
         <Route path="/process-payment" element={<ProcessPayment />} />
         <Route path="/manage-hotels" element={<ManageHotels />} />
+        <Route path="/rent-confirmation" element={<RentConfirmation />} />
 
 
       </Routes>

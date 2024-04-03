@@ -1,52 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { roomData } from "./Dashboard"; // Import roomData from Dashboard
+import axios from "axios";
 import "./BookedRoom.css";
 
 const BookedRoom = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedRoom } = location.state;
+  const [selectedRoomData, setSelectedRoomData] = useState(null);
+  
 
-  const cancelBooking = () => {
-    // Find the selected room index in the roomData array
-    const roomIndex = roomData.findIndex(room => room.id === selectedRoom);
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/rooms/${selectedRoom}`);
+        setSelectedRoomData(response.data);
+      } catch (error) {
+        console.error("Error fetching room data:", error);
+      }
+    };
 
-    // If the selected room exists
-    if (roomIndex !== -1) {
-        // Update the availability status to "available"
-        roomData[roomIndex].availability = "available";
-        
-        // Navigate back to the dashboard page
-        navigate(-1); // Navigate back to the previous page (Dashboard)
-    } else {
-        console.error("Selected room not found.");
+    fetchRoomData();
+  }, [selectedRoom]);
+
+  const cancelBooking = async () => {
+    try {
+      // Update the room availability status to "available"
+      await axios.put(`http://localhost:3001/rooms/${selectedRoom}`, { availability: "available" , booked: 0});
+      navigate(-1); // Navigate back to the previous page (dashboard)
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
     }
   };
 
   const finalizeRenting = () => {
-    // Add your logic for finalizing renting here
-    navigate("/process-payment");
+    navigate("/process-payment", { state: { selectedRoom } });
   };
 
-  // Find the selected room
-  const selectedRoomData = roomData.find(room => room.id === selectedRoom);
-
-  if (!selectedRoomData) {
-    return <div>No room data found for the selected room.</div>;
-  }
 
   return (
     <div className="booked-room-container">
       <div className="booked-room-details">
         <h2>Booked Room Details</h2>
         <div className="booked-room-info">
-          <h3>{selectedRoomData.name}</h3>
-          <p>Availability: {selectedRoomData.availability}</p>
-          <p>Price: ${selectedRoomData.price}</p>
-          <p>View: {selectedRoomData.view}</p>
-          <p>Capacity: {selectedRoomData.capacity}</p>
-          <p>Amenities: {selectedRoomData.amenities.join(", ")}</p>
+          {selectedRoomData && ( // Add defensive check here
+            <>
+              <h3>{selectedRoomData.name}</h3>
+              <p>Availability: {selectedRoomData.booked === 0 ? "available" : "booked"}</p>
+              <p>Price: ${selectedRoomData.Price}</p>
+              <p>View: {selectedRoomData.View_Type}</p>
+              <p>Capacity: {selectedRoomData.Capacity}</p>
+              <p>Amenities: {selectedRoomData.Amenities}</p>
+            </>
+          )}
+
           <div className="button-container">
             <button className="btn" onClick={cancelBooking}>Cancel Booking</button>
             <button className="btn" onClick={finalizeRenting}>Finalize Renting</button>

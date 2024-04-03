@@ -36,6 +36,7 @@
 
 .hotel-card {
   position: relative;
+  background-color:#f9f9f9;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;

@@ -30,6 +30,7 @@ h2 {
   display: inline-block;
   padding: 10px 20px;
   margin-top: 20px;
+  margin-right: 10px; /* Add margin-right */
   margin-bottom: 20px;
   font-size: 1rem;
   color: #fff;
@@ -74,15 +75,14 @@ h2 {
   background-color: #007bff;
   color: white;
   border: none;
-  position: relative;
-  left: 160px;
   border-radius: 4px;
-  padding: 5px 10px;
+  padding: 10px 20px; /* Adjust padding */
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .delete-btn:hover {
-  background-color:  #0056b3;
+  background-color: #0056b3;
 }
 
 .popup-container {

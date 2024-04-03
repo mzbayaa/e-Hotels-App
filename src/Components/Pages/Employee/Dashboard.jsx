@@ -1,76 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Dashboard.css";
-
-const roomData = [
-  {
-    id: 1,
-    name: "Room A",
-    availability: "available",
-    price: 100,
-    amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    view: "City View",
-    capacity: 2,
-  },
-  {
-    id: 2,
-    name: "Room B",
-    availability: "booked",
-    price: 120,
-    amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    view: "Ocean View",
-    capacity: 3,
-  },
-  {
-    id: 3,
-    name: "Room C",
-    availability: "available",
-    price: 150,
-    amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    view: "Mountain View",
-    capacity: 4,
-  },
-  {
-    id: 4,
-    name: "Room D",
-    availability: "booked",
-    price: 200,
-    amenities: ["TV", "Air Conditioning", "Wi-Fi"],
-    view: "Garden View",
-    capacity: 2,
-  },
-];
 
 const Dashboard = () => {
   const [filter, setFilter] = useState("all");
-  const [filteredRooms, setFilteredRooms] = useState(roomData);
+  const [filteredRooms, setFilteredRooms] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
   const [newRoomData, setNewRoomData] = useState({
-    name: "",
-    availability: "",
     price: 0,
     amenities: "",
     view: "",
     capacity: 0,
+    hotelId: "", // Add hotelId to newRoomData
+    hotelIdTouched: false // Track whether the hotelId input has been touched
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/rooms");
+        const roomsWithAvailability = response.data.map(room => {
+          const availability = room.booked === 0 ? "available" : room.booked === 1 ? "booked" : "rented";
+          return { ...room, availability };
+        });
+        setRooms(roomsWithAvailability);
+        setFilteredRooms(roomsWithAvailability); // Initialize filteredRooms with all rooms
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
   const applyFilter = () => {
-    const filteredData =
-      filter === "all"
-        ? roomData
-        : roomData.filter((room) => room.availability === filter);
+    let filteredData = [];
+    if (filter === "all") {
+      filteredData = rooms;
+    } else {
+      if (filter === "available") {
+        filteredData = rooms.filter((room) => room.availability === "available");
+      } else if (filter === "booked") {
+        filteredData = rooms.filter((room) => room.availability === "booked");
+      }
+    }
     setFilteredRooms(filteredData);
   };
 
-  const handleRoomSelect = (roomId, availability) => {
-    setSelectedRoom(roomId === selectedRoom ? null : roomId);
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/hotels");
+        setHotels(response.data);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+
+    fetchHotels();
+  }, []);
+
+  
+  
+
+  const handleRoomSelect = (roomId) => {
+    setSelectedRoom(roomId);
   };
 
-  const handleDeleteRoom = (roomId) => {
-    const updatedFilteredRooms = filteredRooms.filter((room) => room.id !== roomId);
-    setFilteredRooms(updatedFilteredRooms);
+  const handleDeleteRoom = async () => {
+    try {
+      if (selectedRoom) {
+        await axios.delete(`http://localhost:3001/rooms/${selectedRoom}`);
+        const updatedFilteredRooms = filteredRooms.filter((room) => room.Room_ID !== selectedRoom);
+        setFilteredRooms(updatedFilteredRooms);
+        setSelectedRoom(null); // Clear selected room after deletion
+      }
+    } catch (error) {
+      console.error("Error deleting room:", error);
+    }
   };
 
   const handleAddRoom = () => {
@@ -81,45 +93,54 @@ const Dashboard = () => {
     setShowAddRoomPopup(false);
   };
 
-  const handleSaveRoom = () => {
-    const newRoomId = Math.max(...roomData.map((room) => room.id)) + 1;
-    const newRoom = { id: newRoomId, ...newRoomData, amenities: newRoomData.amenities.split(",") };
-    const updatedRoomData = [...filteredRooms, newRoom];
-    setFilteredRooms(updatedRoomData);
-    setNewRoomData({
-      name: "",
-      availability: "",
-      price: 0,
-      amenities: "",
-      view: "",
-      capacity: 0,
-    });
-    setShowAddRoomPopup(false);
+  const handleSaveRoom = async () => {
+    try {
+      console.log("Saving room:", newRoomData);
+      const response = await axios.post("http://localhost:3001/rooms", {
+        Price: newRoomData.price,
+        Capacity: newRoomData.capacity,
+        View_Type: newRoomData.view,
+        Amenities: newRoomData.amenities,
+        booked: 0,
+        Hotel_ID: newRoomData.hotelId // Assign the selected Hotel_ID
+      });
+      console.log("Room saved successfully:", response.data);
+      const newRoom = { ...response.data, availability: "available" };
+      setFilteredRooms([...filteredRooms, newRoom]);
+      setNewRoomData({
+        price: 0,
+        amenities: "",
+        view: "",
+        capacity: 0,
+        hotelId: "", // Reset hotelId after saving
+        hotelIdTouched: false // Reset hotelIdTouched after saving
+      });
+      setShowAddRoomPopup(false);
+    } catch (error) {
+      console.error("Error adding room:", error);
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRoomData({ ...newRoomData, [name]: value });
+    setNewRoomData({ ...newRoomData, [name]: value, hotelIdTouched: true });
+  };
+
+  const isValidHotelId = (hotelId) => {
+    return hotels.some((hotel) => hotel.Hotel_ID === parseInt(hotelId));
   };
 
   const navigateToNextPage = () => {
-    if (selectedRoom !== null) {
-      const room = roomData.find((room) => room.id === selectedRoom);
-      if (room) {
-        if (room.availability === "available") {
-          navigate("/book-rent-room", { state: { selectedRoom } });
-        } else if (room.availability === "booked") {
-          navigate("/booked-room", { state: { selectedRoom } });
-        }
-      } else {
-        console.error("Room not found");
-      }
+    const room = filteredRooms.find(room => room.Room_ID === selectedRoom);
+    if (room && room.availability === "available") {
+      navigate("/book-rent-room", { state: { selectedRoom } });
+    }
+    if (room && room.availability === "booked") {
+      navigate("/booked-room", { state: { selectedRoom } });
     }
   };
 
-  const handleManageHotels = () => {
-    // Implement navigation to another page for managing hotels
-    // For example:
+  const navigateToManageHotels = () => {
     navigate("/manage-hotels");
   };
 
@@ -138,12 +159,16 @@ const Dashboard = () => {
         Apply Filter
       </button>
 
-      <button className="btn" onClick={handleManageHotels}>
-        Manage Hotels
-      </button>
-
       <button className="btn" onClick={handleAddRoom}>
         Add Room
+      </button>
+
+      <button className="btn delete-btn" onClick={handleDeleteRoom} disabled={!selectedRoom}>
+        Delete Room
+      </button>
+
+      <button className="btn" onClick={navigateToManageHotels}>
+        Manage Hotels
       </button>
 
       <button className="btn" onClick={navigateToNextPage} disabled={selectedRoom === null}>
@@ -153,19 +178,16 @@ const Dashboard = () => {
       <div className="room-list">
         {filteredRooms.map((room) => (
           <div
-            key={room.id}
-            className={`room-card ${selectedRoom === room.id ? "selected" : ""}`}
-            onClick={() => handleRoomSelect(room.id, room.availability)}
+            key={room.Room_ID}
+            className={`room-card ${selectedRoom === room.Room_ID ? "selected" : ""}`}
+            onClick={() => handleRoomSelect(room.Room_ID)}
           >
             <h3>{room.name}</h3>
             <p>Availability: {room.availability}</p>
-            <p>Price: ${room.price}</p>
-            <p>View: {room.view}</p>
-            <p>Capacity: {room.capacity}</p>
-            <p>Amenities: {room.amenities.join(", ")}</p>
-            <button className="delete-btn" onClick={() => handleDeleteRoom(room.id)}>
-              Delete
-            </button>
+            <p>Price: ${room.Price}</p>
+            <p>View: {room.View_Type}</p>
+            <p>Capacity: {room.Capacity}</p>
+            <p>Amenities: {room.Amenities}</p>
           </div>
         ))}
       </div>
@@ -174,20 +196,19 @@ const Dashboard = () => {
         <div className="popup-container">
           <div className="popup">
             <h3>Add Room</h3>
-            <label>Name:</label>
+
+            <label>Hotel ID:</label>
             <input
-              type="text"
-              name="name"
-              value={newRoomData.name}
+              type="number"
+              name="hotelId"
+              value={newRoomData.hotelId}
               onChange={handleInputChange}
             />
-            <label>Availability:</label>
-            <input
-              type="text"
-              name="availability"
-              value={newRoomData.availability}
-              onChange={handleInputChange}
-            />
+
+            {newRoomData.hotelIdTouched && !isValidHotelId(newRoomData.hotelId) && (
+              <p style={{ color: 'red' }}>Invalid Hotel ID</p>
+            )}
+
             <label>Price:</label>
             <input
               type="number"
@@ -195,6 +216,7 @@ const Dashboard = () => {
               value={newRoomData.price}
               onChange={handleInputChange}
             />
+
             <label>Amenities:</label>
             <input
               type="text"
@@ -202,6 +224,7 @@ const Dashboard = () => {
               value={newRoomData.amenities}
               onChange={handleInputChange}
             />
+
             <label>View:</label>
             <input
               type="text"
@@ -209,6 +232,7 @@ const Dashboard = () => {
               value={newRoomData.view}
               onChange={handleInputChange}
             />
+
             <label>Capacity:</label>
             <input
               type="number"
@@ -216,8 +240,9 @@ const Dashboard = () => {
               value={newRoomData.capacity}
               onChange={handleInputChange}
             />
+
             <div>
-              <button className="btn" onClick={handleSaveRoom}>
+              <button className="btn" onClick={handleSaveRoom} disabled={!isValidHotelId(newRoomData.hotelId)}>
                 Save
               </button>
               <button className="btn" onClick={handlePopupClose}>
@@ -231,5 +256,4 @@ const Dashboard = () => {
   );
 };
 
-export { roomData };
 export default Dashboard;
