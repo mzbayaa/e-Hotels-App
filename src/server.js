@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios"; // Import Axios
 import mysql from "mysql";
 import cors from "cors";
 import axios from "axios"; // Import axios for making HTTP requests
