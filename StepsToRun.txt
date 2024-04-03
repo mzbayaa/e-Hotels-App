@@ -1,0 +1,21 @@
+To run website from repo
+Download Mysql server and mysql workbench
+Download github repo
+npm i react-router-dom
+npm install axios
+npm install cors
+npm install -g nodemon
+npm start
+
+To setup Database:
+Follow Steps in CreateDatabaseWithSteps.sql file to create db
+
+To run node.js server side:
+1. Run this in mysql:
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+FLUSH PRIVILEGES;
+
+2. cd src
+3. nodemon server.js
+
+

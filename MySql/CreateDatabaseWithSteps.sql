@@ -1,4 +1,123 @@
--- SQL Insert Statements for Hotel Rooms --
+-- 1. To Create the database and use it
+CREATE DATABASE eHotels;
+USE eHotels;
+
+-- 2. Create Hotel Chain Table
+CREATE TABLE `Hotel_Chain` (
+    `Name` VARCHAR(255) NOT NULL,
+    `Street` VARCHAR(255) NOT NULL,
+    `City` VARCHAR(100) NOT NULL,
+    `Postal_Code` VARCHAR(20) NOT NULL,
+    `Number_Of_Hotels` INT UNSIGNED NOT NULL,
+    `Email_Address` VARCHAR(254) NOT NULL,
+    `Phone_Number` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`Name`)
+);
+
+-- 3. Insert hotel chains
+INSERT INTO Hotel_Chain (Name, Street, City, Postal_Code, Number_Of_Hotels, Email_Address, Phone_Number)
+VALUES
+    ('Sunrise Stay', '100 Sunshine Blvd', 'Las Vegas', '89101', 8, 'contact@sunrisestay.com', '702-100-2000'),
+    ('Moonlight Inns', '200 Lunar Ln', 'San Francisco', '94105', 8, 'info@moonlightinns.com', '415-200-3000'),
+    ('Starlight Hotels', '300 Star Rd', 'New York', '10001', 8, 'service@starlighthotels.com', '212-300-4000'),
+    ('Oceanview Resorts', '400 Ocean Dr', 'Miami', '33139', 8, 'help@oceanviewresorts.com', '305-400-5000'),
+    ('Mountain High Lodges', '500 Summit Peak', 'Denver', '80201', 8, 'support@mountainhighlodges.com', '720-500-6000');
+
+-- 4. Create Hotel Chain Table
+CREATE TABLE Hotel (
+    Hotel_ID INT AUTO_INCREMENT,
+    Chain_Name VARCHAR(255) NOT NULL,
+    -- Hotel-specific attributes
+    Number_Of_Rooms INT UNSIGNED NOT NULL,
+    Star_Rating INT UNSIGNED NOT NULL,
+    Contact_Email VARCHAR(254) NOT NULL,
+    Phone_Number VARCHAR(20) NOT NULL,
+    Manager VARCHAR(255) NOT NULL,
+    Street VARCHAR(255) NOT NULL,
+    City VARCHAR(100) NOT NULL,
+    Postal_Code VARCHAR(20) NOT NULL,
+    PRIMARY KEY (Hotel_ID),
+    FOREIGN KEY (Chain_Name) REFERENCES Hotel_Chain(Name)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- 5. Insert Hotels
+INSERT INTO Hotel (Chain_Name, Number_Of_Rooms, Star_Rating, Contact_Email, Phone_Number, Manager, Street, City, Postal_Code)
+VALUES
+    ('Sunrise Stay', 120, 5, 'luxury@sunrisevegas.com', '702-101-2001', 'Alice Johnson', '101 Casino Blvd', 'Las Vegas', '89109'),
+    ('Sunrise Stay', 80, 3, 'budget@sunrisevegas.com', '702-101-2002', 'Bob Marley', '103 Casino Blvd', 'Las Vegas', '89109'),
+    ('Sunrise Stay', 100, 4, 'comfort@sunrisevegas.com', '702-101-2003', 'Carol King', '250 Desert Lane', 'Las Vegas', '89121'),
+    ('Sunrise Stay', 150, 5, 'elite@sunrisereno.com', '775-101-2004', 'Dave Brubeck', '400 Sierra Rd', 'Reno', '89501'),
+    ('Sunrise Stay', 70, 3, 'economy@sunrisereno.com', '775-101-2005', 'Elton John', '402 Sierra Rd', 'Reno', '89501'),
+    ('Sunrise Stay', 90, 4, 'business@sunriselv.com', '702-101-2006', 'Frank Sinatra', '550 Vegas Strip', 'Las Vegas', '89119'),
+    ('Sunrise Stay', 130, 5, 'premier@sunriselv.com', '702-101-2007', 'Gloria Gaynor', '552 Vegas Strip', 'Las Vegas', '89119'),
+    ('Sunrise Stay', 60, 2, 'standard@sunrisehenderson.com', '702-101-2008', 'Harry Connick Jr', '100 Horizon Way', 'Henderson', '89012');
+
+INSERT INTO Hotel (Chain_Name, Number_Of_Rooms, Star_Rating, Contact_Email, Phone_Number, Manager, Street, City, Postal_Code)
+VALUES
+    ('Moonlight Inns', 85, 4, 'deluxe@moonlightsf.com', '415-202-3001', 'Isaac Hayes', '200 Bay St', 'San Francisco', '94133'),
+    ('Moonlight Inns', 55, 2, 'modest@moonlightoak.com', '510-202-3002', 'Joni Mitchell', '320 Oak Rd', 'Oakland', '94607'),
+    ('Moonlight Inns', 95, 5, 'luxury@moonlightsf.com', '415-202-3003', 'Kenny Loggins', '202 Bay St', 'San Francisco', '94133'),
+    ('Moonlight Inns', 65, 3, 'standard@moonlightberkeley.com', '510-202-3004', 'Linda Ronstadt', '450 University Ave', 'Berkeley', '94703'),
+    ('Moonlight Inns', 75, 3, 'comfort@moonlightsanjose.com', '408-202-3005', 'Michael McDonald', '500 Tech Blvd', 'San Jose', '95112'),
+    ('Moonlight Inns', 120, 5, 'elite@moonlightsf.com', '415-202-3006', 'Nina Simone', '204 Bay St', 'San Francisco', '94133'),
+    ('Moonlight Inns', 80, 4, 'business@moonlightoak.com', '510-202-3007', 'Otis Redding', '322 Oak Rd', 'Oakland', '94607'),
+    ('Moonlight Inns', 70, 2, 'economy@moonlightberkeley.com', '510-202-3008', 'Patti LaBelle', '452 University Ave', 'Berkeley', '94703');
+
+INSERT INTO Hotel (Chain_Name, Number_Of_Rooms, Star_Rating, Contact_Email, Phone_Number, Manager, Street, City, Postal_Code)
+VALUES
+    ('Starlight Hotels', 130, 5, 'prestige@starlightny.com', '212-303-4001', 'Quincy Jones', '500 Broadway', 'New York', '10012'),
+    ('Starlight Hotels', 110, 4, 'executive@starlightny.com', '212-303-4002', 'Ray Charles', '502 Broadway', 'New York', '10012'),
+    ('Starlight Hotels', 90, 3, 'standard@starlightbrooklyn.com', '718-303-4003', 'Sara Bareilles', '750 King St', 'Brooklyn', '11211'),
+    ('Starlight Hotels', 70, 2, 'economy@starlightqueens.com', '347-303-4004', 'Tony Bennett', '600 Queens Blvd', 'Queens', '11374'),
+    ('Starlight Hotels', 150, 5, 'luxury@starlightny.com', '212-303-4005', 'Usher', '505 Broadway', 'New York', '10012'),
+    ('Starlight Hotels', 80, 4, 'comfort@starlightny.com', '212-303-4006', 'Vince Gill', '510 Broadway', 'New York', '10012'),
+    ('Starlight Hotels', 65, 3, 'cozy@starlightbuffalo.com', '716-303-4007', 'Willie Nelson', '900 Buffalo Rd', 'Buffalo', '14220'),
+    ('Starlight Hotels', 120, 5, 'elite@starlightbuffalo.com', '716-303-4008', 'Xavier Rudd', '902 Buffalo Rd', 'Buffalo', '14220');
+
+INSERT INTO Hotel (Chain_Name, Number_Of_Rooms, Star_Rating, Contact_Email, Phone_Number, Manager, Street, City, Postal_Code)
+VALUES
+    ('Oceanview Resorts', 140, 5, 'paradise@oceanviewmiami.com', '305-404-5001', 'Yolanda Adams', '800 Ocean Dr', 'Miami', '33139'),
+    ('Oceanview Resorts', 100, 4, 'seaside@oceanviewmiami.com', '305-404-5002', 'Zac Brown', '802 Ocean Dr', 'Miami', '33139'),
+    ('Oceanview Resorts', 75, 3, 'marine@oceanviewftl.com', '954-404-5003', 'Aaron Neville', '500 Beachway Ave', 'Fort Lauderdale', '33301'),
+    ('Oceanview Resorts', 60, 2, 'harbor@oceanviewkeywest.com', '305-404-5004', 'Britney Spears', '250 Duval St', 'Key West', '33040'),
+    ('Oceanview Resorts', 130, 5, 'luxury@oceanviewmiami.com', '305-404-5005', 'Carlos Santana', '805 Ocean Dr', 'Miami', '33139'),
+    ('Oceanview Resorts', 85, 4, 'deluxe@oceanviewftl.com', '954-404-5006', 'Diana Krall', '505 Beachway Ave', 'Fort Lauderdale', '33301'),
+    ('Oceanview Resorts', 95, 3, 'standard@oceanviewkeywest.com', '305-404-5007', 'Elvis Costello', '255 Duval St', 'Key West', '33040'),
+    ('Oceanview Resorts', 55, 2, 'budget@oceanviewmiami.com', '305-404-5008', 'Fiona Apple', '810 Ocean Dr', 'Miami', '33139');
+
+INSERT INTO Hotel (Chain_Name, Number_Of_Rooms, Star_Rating, Contact_Email, Phone_Number, Manager, Street, City, Postal_Code)
+VALUES
+    ('Mountain High Lodges', 120, 5, 'summit@mountainhighdenver.com', '720-505-6001', 'Glen Campbell', '100 Mountain Rd', 'Denver', '80202'),
+    ('Mountain High Lodges', 80, 3, 'basecamp@mountainhighdenver.com', '720-505-6002', 'Hank Williams', '105 Mountain Rd', 'Denver', '80202'),
+	('Mountain High Lodges', 90, 4, 'ridge@mountainhighboulder.com', '303-505-6003', 'Iris DeMent', '200 Boulder Way', 'Boulder', '80302'),
+    ('Mountain High Lodges', 70, 3, 'trail@mountainhighvail.com', '970-505-6004', 'Johnny Cash', '150 Ski Slope Rd', 'Vail', '81657'),
+    ('Mountain High Lodges', 150, 5, 'peak@mountainhighaspen.com', '970-505-6005', 'Kacey Musgraves', '300 Aspen Mountain Rd', 'Aspen', '81611'),
+    ('Mountain High Lodges', 65, 2, 'valley@mountainhighaspen.com', '970-505-6006', 'Lyle Lovett', '305 Aspen Mountain Rd', 'Aspen', '81611'),
+    ('Mountain High Lodges', 110, 4, 'cliff@mountainhighvail.com', '970-505-6007', 'Margo Price', '155 Ski Slope Rd', 'Vail', '81657'),
+    ('Mountain High Lodges', 50, 2, 'stream@mountainhighboulder.com', '303-505-6008', 'Neil Young', '205 Boulder Way', 'Boulder', '80302'),
+    ('Mountain High Lodges', 130, 5, 'summit@mountainhighvail.com', '970-505-6009', 'Patsy Cline', '160 Ski Slope Rd', 'Vail', '81657'),
+    ('Mountain High Lodges', 85, 3, 'forest@mountainhighdenver.com', '720-505-6010', 'Quentin Tarantino', '110 Mountain Rd', 'Denver', '80202');
+
+
+-- 6. Create Room Table
+CREATE TABLE Room (
+    Room_ID INT AUTO_INCREMENT,
+    Hotel_ID INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Capacity INT UNSIGNED NOT NULL,
+    View_Type VARCHAR(255),
+    Is_Extendible BOOLEAN,
+    Problems TEXT,
+    Amenities TEXT,
+    PRIMARY KEY (Room_ID),
+    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- 7. SQL Insert Statements for Hotel Rooms
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (1, 120, 1, 'Sea View', TRUE, '', 'WiFi, TV, Air Conditioning, Mini-bar');
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (1, 140, 2, 'City View', FALSE, '', 'WiFi, TV, Air Conditioning');
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (1, 160, 3, 'Sea View', TRUE, '', 'WiFi, TV, Air Conditioning, Mini-bar');
@@ -209,3 +328,391 @@ INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems,
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (42, 160, 3, 'Sea View', TRUE, '', 'WiFi, TV, Air Conditioning, Mini-bar');
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (42, 180, 4, 'City View', FALSE, '', 'WiFi, TV, Air Conditioning');
 INSERT INTO Room (Hotel_ID, Price, Capacity, View_Type, Is_Extendible, Problems, Amenities) VALUES (42, 200, 5, 'Sea View', TRUE, '', 'WiFi, TV, Air Conditioning, Mini-bar');
+
+-- 8. Adjust Room table
+ALTER TABLE Room
+ADD COLUMN booked TINYINT NOT NULL DEFAULT 0;
+
+-- 9. Create Person Table
+CREATE TABLE Person (
+    Person_ID INT AUTO_INCREMENT PRIMARY KEY,
+    First_Name VARCHAR(255) NOT NULL,
+    Last_Name VARCHAR(255) NOT NULL,
+    Street VARCHAR(255),
+    City VARCHAR(100),
+    Postal_Code VARCHAR(20)
+);
+
+-- 10 Insert People
+INSERT INTO person (First_Name, Last_Name, Street, City, Postal_Code)
+VALUES 
+('Alice', 'Johnson', '101 Casino Blvd', 'Las Vegas', '89109'),
+('Bob', 'Marley', '103 Reggae Street', 'Miami', '33101'),
+('Carol', 'King', '202 Tapestry Lane', 'Los Angeles', '90001'),
+('Dave', 'Brubeck', '304 Jazz Ave', 'San Francisco', '94102'),
+('Elton', 'John', '405 Rocket Man Rd', 'New York', '10001'),
+('Frank', 'Sinatra', '506 Blue Eyes Way', 'Hoboken', '07030'),
+('Gloria', 'Gaynor', '707 Survivor St', 'Newark', '07101'),
+('Harry', 'Connick Jr', '808 Crooner Ct', 'New Orleans', '70112'),
+('Isaac', 'Hayes', '909 Shaft St', 'Memphis', '38103'),
+('Joni', 'Mitchell', '101 Big Yellow Taxi Ln', 'Seattle', '98101'),
+('Kenny', 'Loggins', '202 Danger Zone Rd', 'Los Angeles', '90002'),
+('Linda', 'Ronstadt', '303 Desperado Drive', 'Tucson', '85701'),
+('Michael', 'McDonald', '404 Yacht Club Way', 'St. Louis', '63101'),
+('Nina', 'Simone', '505 High Priestess Ln', 'Baltimore', '21201'),
+('Otis', 'Redding', '606 Dock of the Bay', 'Macon', '31201'),
+('Patti', 'LaBelle', '707 Lady Marmalade Dr', 'Philadelphia', '19101'),
+('Quincy', 'Jones', '808 Q St', 'Chicago', '60601'),
+('Ray', 'Charles', '909 Georgia on My Mind Ave', 'Albany', '31701'),
+('Sara', 'Bareilles', '101 Brave Ln', 'Eureka', '95501'),
+('Tony', 'Bennett', '202 Left My Heart St', 'San Francisco', '94109'),
+('Usher', '', '303 Confessions Blvd', 'Atlanta', '30301'),
+('Vince', 'Gill', '404 Guitar St', 'Nashville', '37201'),
+('Willie', 'Nelson', '505 On the Road Again Ave', 'Austin', '78701'),
+('Xavier', 'Rudd', '606 Spirit Bird Ln', 'Asheville', '28801'),
+('Yolanda', 'Adams', '707 Gospel Queen Quay', 'Houston', '77001'),
+('Zac', 'Brown', '808 Chicken Fried Rd', 'Atlanta', '30302'),
+('Aaron', 'Neville', '909 Tell It Like It Is Terrace', 'New Orleans', '70115'),
+('Britney', 'Spears', '101 Pop Princess Path', 'Kentwood', '70444'),
+('Carlos', 'Santana', '202 Smooth Ave', 'San Francisco', '94110'),
+('Diana', 'Krall', '303 Jazz Pianist Pl', 'Nanaimo', 'V9R 1E3'), 
+('Elvis', 'Costello', '404 Watching the Detectives', 'London', 'EC3A 1'),
+('Fiona', 'Apple', '505 Criminal Way', 'New York', '10003'),
+('Glen', 'Campbell', '606 Rhinestone Cowboy Rd', 'Delight', '71940'),
+('Hank', 'Williams', '707 Lost Highway', 'Montgomery', '36101'),
+('Iris', 'DeMent', '808 Our Town Rd', 'Paragould', '72450'),
+('Johnny', 'Cash', '909 Man in Black Blvd', 'Kingsland', '71652'),
+('Kacey', 'Musgraves', '101 Golden Hour St', 'Mineola', '75773'),
+('Lyle', 'Lovett', '202 Large Band Blvd', 'Klein', '77379'),
+('Margo', 'Price', '303 Midwest Farmer\'s Daughter Dr', 'Aledo', '61231'),
+('Neil', 'Young', '404 Harvest Moon Ave', 'Toronto', 'M4B 1B3'),
+('Patsy', 'Cline', '505 Crazy Ave', 'Winchester', '22601'),
+('Quentin', 'Tarantino', '606 Pulp Fiction Ln', 'Knoxville', '37901');
+
+
+-- 11 Create Customer
+CREATE TABLE Customer (
+    Customer_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Person_ID INT NOT NULL,
+    Registration_Date DATE NOT NULL,
+    FOREIGN KEY (Person_ID) REFERENCES Person(Person_ID)
+);
+
+-- 12 Create Employee
+CREATE TABLE Employee (
+    Employee_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Person_ID INT,
+    Role VARCHAR(100),
+    Supervisor_ID INT,
+    FOREIGN KEY (Person_ID) REFERENCES Person(Person_ID),
+    FOREIGN KEY (Supervisor_ID) REFERENCES Employee(Employee_ID)
+        ON DELETE SET NULL
+);
+
+-- 13 Insert Employees
+INSERT INTO employee (Person_ID, Role)
+VALUES 
+(1, 'Manager'),
+(2, 'Manager'),
+(3, 'Manager'),
+(4, 'Manager'),
+(5, 'Manager'),
+(6, 'Manager'),
+(7, 'Manager'),
+(8, 'Manager'),
+(9, 'Manager'),
+(10, 'Manager'),
+(11, 'Manager'),
+(12, 'Manager'),
+(13, 'Manager'),
+(14, 'Manager'),
+(15, 'Manager'),
+(16, 'Manager'),
+(17, 'Manager'),
+(18, 'Manager'),
+(19, 'Manager'),
+(20, 'Manager'),
+(21, 'Manager'),
+(22, 'Manager'),
+(23, 'Manager'),
+(24, 'Manager'),
+(25, 'Manager'),
+(26, 'Manager'),
+(27, 'Manager'),
+(28, 'Manager'),
+(29, 'Manager'),
+(30, 'Manager'),
+(31, 'Manager'),
+(32, 'Manager'),
+(33, 'Manager'),
+(34, 'Manager'),
+(35, 'Manager'),
+(36, 'Manager'),
+(37, 'Manager'),
+(38, 'Manager'),
+(39, 'Manager'),
+(40, 'Manager'),
+(41, 'Manager'),
+(42, 'Manager');
+
+-- 14 Create Renting
+CREATE TABLE Renting (
+    Renting_ID INT AUTO_INCREMENT,
+    Room_ID INT NOT NULL,
+    Check_In_Date DATE NOT NULL,
+    Check_Out_Date DATE NOT NULL,
+    PRIMARY KEY (Renting_ID),
+    FOREIGN KEY (Room_ID) REFERENCES Room(Room_ID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- 15 Adjust Renting
+ALTER TABLE renting
+ADD COLUMN Customer_ID INT;
+
+ALTER TABLE renting
+ADD CONSTRAINT fk_renting_customer
+FOREIGN KEY (Customer_ID) REFERENCES customer(Customer_ID);
+
+-- 16 Create Booking Table
+CREATE TABLE Booking (
+    Booking_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Customer_ID INT NOT NULL,
+    Date_Of_Booking DATE NOT NULL,
+    Date_Of_Stay DATE NOT NULL,
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+-- 17 Adjust Room Table
+-- Adding Booking_ID column
+ALTER TABLE room
+ADD COLUMN Booking_ID INT;
+
+-- Adding Renting_ID column
+ALTER TABLE room
+ADD COLUMN Renting_ID INT;
+
+-- Adding foreign key constraint for Booking_ID
+ALTER TABLE room
+ADD CONSTRAINT fk_room_booking
+FOREIGN KEY (Booking_ID) REFERENCES booking(Booking_ID);
+
+-- Adding foreign key constraint for Renting_ID
+ALTER TABLE room
+ADD CONSTRAINT fk_room_renting
+FOREIGN KEY (Renting_ID) REFERENCES renting(Renting_ID);
+
+-- 18 Adjust Booking Table
+-- Adding Renting_ID column
+ALTER TABLE booking
+ADD COLUMN Room_ID INT;
+
+-- Adding foreign key constraint for Renting_ID
+ALTER TABLE booking
+ADD CONSTRAINT fk_room_booked
+FOREIGN KEY (Room_ID) REFERENCES room(Room_ID);
+
+
+-- 19 Create Remaining Tables
+CREATE TABLE Occupies (
+    Renting_ID INT NOT NULL,
+    Room_ID INT NOT NULL,
+    PRIMARY KEY (Renting_ID, Room_ID),
+    FOREIGN KEY (Renting_ID) REFERENCES Renting(Renting_ID)
+        ON DELETE CASCADE,
+    FOREIGN KEY (Room_ID) REFERENCES Room(Room_ID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE Reservation (
+    Reservation_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Renting_ID INT NOT NULL,
+    Booking_ID INT NOT NULL,
+    Employee_ID INT NOT NULL,
+    FOREIGN KEY (Renting_ID) REFERENCES Renting(Renting_ID),
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
+    FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID)
+);
+
+CREATE TABLE Transform (
+    Transform_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Renting_ID INT NOT NULL,
+    Booking_ID INT NOT NULL,
+    FOREIGN KEY (Renting_ID) REFERENCES Renting(Renting_ID),
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
+);
+
+CREATE TABLE Archive (
+    Archive_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Booking_ID INT NOT NULL,
+    Customer_ID INT NOT NULL,
+    Renting_ID INT,
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Renting_ID) REFERENCES Renting(Renting_ID)
+);
+
+-- 20 Adjust Bookings Table
+ALTER TABLE booking
+ADD COLUMN Check_In_Date DATE NOT NULL,
+ADD COLUMN Check_Out_Date DATE NOT NULL;
+
+-- 21 Create Views
+-- View 1
+CREATE VIEW AvailableRoomsPerArea AS
+SELECT h.City, COUNT(*) AS AvailableRooms
+FROM Hotel h
+JOIN Room r ON h.Hotel_ID = r.Hotel_ID
+LEFT JOIN Renting rt ON r.Room_ID = rt.Room_ID
+WHERE rt.Check_In_Date IS NULL OR rt.Check_Out_Date < CURRENT_DATE
+GROUP BY h.City;
+
+-- View 2
+CREATE VIEW TotalCapacityPerHotel AS
+SELECT Hotel_ID, SUM(Capacity) AS TotalCapacity
+FROM Room
+GROUP BY Hotel_ID;
+
+-- View 2 Specific Hotel
+-- View that combines hotel details with the total room capacity
+CREATE VIEW SpecificHotelDetailsWithTotalCapacity AS
+SELECT 
+    Hotel.Hotel_ID,
+    Hotel.Chain_Name,
+    Hotel.Star_Rating,
+    CONCAT(Hotel.Street, ', ', Hotel.City, ', ', Hotel.Postal_Code) AS Address,
+    Hotel.Phone_Number,
+    Hotel.Contact_Email,
+    Hotel.Manager,
+    TC.TotalCapacity
+FROM Hotel
+JOIN (
+    SELECT Hotel_ID, SUM(Capacity) AS TotalCapacity
+    FROM Room
+    GROUP BY Hotel_ID
+) AS TC ON Hotel.Hotel_ID = TC.Hotel_ID
+WHERE Hotel.Hotel_ID = 41; -- Filtering for the specific hotel by ID
+
+
+-- 22 Create Indexes
+CREATE INDEX idx_hotel_chain_name ON hotel_chain(Name);
+
+CREATE INDEX idx_hotel_id ON hotel(Hotel_ID);
+
+CREATE INDEX idx_booking_dates ON booking(Check_In_Date, Check_Out_Date);
+
+-- 23 Create Triggers
+-- Delete all hotel chains associated with hotel chain if hotel chain was deleted
+DELIMITER //
+CREATE TRIGGER delete_hotels_on_chain_delete
+AFTER DELETE ON hotel_chain
+FOR EACH ROW
+BEGIN
+	DELETE FROM hotel WHERE Chain_Name = OLD.NAME;
+END;
+//
+DELIMITER ;
+
+-- Delete all employees and customers associated with a deleted person 
+DELIMITER //
+
+CREATE TRIGGER person_deleted
+AFTER DELETE ON person
+FOR EACH ROW
+BEGIN
+    DELETE FROM employee WHERE Person_ID = OLD.Person_ID;
+    DELETE FROM customer WHERE Person_ID = OLD.Person_ID;
+END;
+
+//
+DELIMITER ;
+
+-- Delete all rooms associated that work at a deleted hotel
+DELIMITER //
+CREATE TRIGGER hotel_deleted
+AFTER DELETE ON hotel
+FOR EACH ROW
+BEGIN
+	DELETE FROM Room WHERE Hotel_ID = OLD.Hotel_ID;
+END;
+//
+DELIMITER ;
+
+-- 24 User Connection password
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+FLUSH PRIVILEGES;
+
+-- 25 Alter Person, Customer, Employee
+ALTER TABLE Customer DROP FOREIGN KEY Customer_ibfk_1;
+ALTER TABLE Employee DROP FOREIGN KEY Employee_ibfk_1;
+
+ALTER TABLE Customer ADD COLUMN First_Name VARCHAR(255) NOT NULL,
+                           ADD COLUMN Last_Name VARCHAR(255) NOT NULL,
+                           ADD COLUMN Street VARCHAR(255),
+                           ADD COLUMN City VARCHAR(100),
+                           ADD COLUMN Postal_Code VARCHAR(20);
+
+ALTER TABLE Employee ADD COLUMN First_Name VARCHAR(255) NOT NULL,
+                          ADD COLUMN Last_Name VARCHAR(255) NOT NULL,
+                          ADD COLUMN Street VARCHAR(255),
+                          ADD COLUMN City VARCHAR(100),
+                          ADD COLUMN Postal_Code VARCHAR(20);
+
+DROP TABLE Person;
+
+ALTER TABLE Customer ADD COLUMN Security_ID VARCHAR(36);
+
+alter table customer
+DROP COLUMN Person_ID;
+
+alter table employee
+DROP COLUMN Person_ID;
+
+-- 26 Alter Employee Table
+UPDATE Employee SET First_Name='Alice', Last_Name='Johnson', Street='101 Casino Blvd', City='Las Vegas', Postal_Code='89109' WHERE Employee_ID = 1;
+UPDATE Employee SET First_Name='Bob', Last_Name='Marley', Street='103 Reggae Street', City='Miami', Postal_Code='33101' WHERE Employee_ID = 2;
+UPDATE Employee SET First_Name='Carol', Last_Name='King', Street='202 Tapestry Lane', City='Los Angeles', Postal_Code='90001' WHERE Employee_ID = 3;
+UPDATE Employee SET First_Name='Dave', Last_Name='Brubeck', Street='304 Jazz Ave', City='San Francisco', Postal_Code='94102' WHERE Employee_ID = 4;
+UPDATE Employee SET First_Name='Elton', Last_Name='John', Street='405 Rocket Man Rd', City='New York', Postal_Code='10001' WHERE Employee_ID = 5;
+UPDATE Employee SET First_Name='Frank', Last_Name='Sinatra', Street='506 Blue Eyes Way', City='Hoboken', Postal_Code='07030' WHERE Employee_ID = 6;
+UPDATE Employee SET First_Name='Gloria', Last_Name='Gaynor', Street='707 Survivor St', City='Newark', Postal_Code='07101' WHERE Employee_ID = 7;
+UPDATE Employee SET First_Name='Harry', Last_Name='Connick Jr', Street='808 Crooner Ct', City='New Orleans', Postal_Code='70112' WHERE Employee_ID = 8;
+UPDATE Employee SET First_Name='Isaac', Last_Name='Hayes', Street='909 Shaft St', City='Memphis', Postal_Code='38103' WHERE Employee_ID = 9;
+UPDATE Employee SET First_Name='Joni', Last_Name='Mitchell', Street='101 Big Yellow Taxi Ln', City='Seattle', Postal_Code='98101' WHERE Employee_ID = 10;
+UPDATE Employee SET First_Name='Kenny', Last_Name='Loggins', Street='202 Danger Zone Rd', City='Los Angeles', Postal_Code='90002' WHERE Employee_ID = 11;
+UPDATE Employee SET First_Name='Linda', Last_Name='Ronstadt', Street='303 Desperado Drive', City='Tucson', Postal_Code='85701' WHERE Employee_ID = 12;
+UPDATE Employee SET First_Name='Michael', Last_Name='McDonald', Street='404 Yacht Club Way', City='St. Louis', Postal_Code='63101' WHERE Employee_ID = 13;
+UPDATE Employee SET First_Name='Nina', Last_Name='Simone', Street='505 High Priestess Ln', City='Baltimore', Postal_Code='21201' WHERE Employee_ID = 14;
+UPDATE Employee SET First_Name='Otis', Last_Name='Redding', Street='606 Dock of the Bay', City='Macon', Postal_Code='31201' WHERE Employee_ID = 15;
+UPDATE Employee SET First_Name='Patti', Last_Name='LaBelle', Street='707 Lady Marmalade Dr', City='Philadelphia', Postal_Code='19101' WHERE Employee_ID = 16;
+UPDATE Employee SET First_Name='Quincy', Last_Name='Jones', Street='808 Q St', City='Chicago', Postal_Code='60601' WHERE Employee_ID = 17;
+UPDATE Employee SET First_Name='Ray', Last_Name='Charles', Street='909 Georgia on My Mind Ave', City='Albany', Postal_Code='31701' WHERE Employee_ID = 18;
+UPDATE Employee SET First_Name='Sara', Last_Name='Bareilles', Street='101 Brave Ln', City='Eureka', Postal_Code='95501' WHERE Employee_ID = 19;
+UPDATE Employee SET First_Name='Tony', Last_Name='Bennett', Street='202 Left My Heart St', City='San Francisco', Postal_Code='94109' WHERE Employee_ID = 20;
+UPDATE Employee SET First_Name='Usher', City='Atlanta', Street='', Postal_Code='30301' WHERE Employee_ID = 21;
+UPDATE Employee SET First_Name='Vince', Last_Name='Gill', Street='404 Guitar St', City='Nashville', Postal_Code='37201' WHERE Employee_ID = 22;
+UPDATE Employee SET First_Name='Willie', Last_Name='Nelson', Street='505 On the Road Again Ave', City='Austin', Postal_Code='78701' WHERE Employee_ID = 23;
+UPDATE Employee SET First_Name='Xavier', Last_Name='Rudd', Street='606 Spirit Bird Ln', City='Asheville', Postal_Code='28801' WHERE Employee_ID = 24;
+UPDATE Employee SET First_Name='Yolanda', Last_Name='Adams', Street='707 Gospel Queen Quay', City='Houston', Postal_Code='77001' WHERE Employee_ID = 25;
+UPDATE Employee SET First_Name='Zac', Last_Name='Brown', Street='808 Chicken Fried Rd', City='Atlanta', Postal_Code='30302' WHERE Employee_ID = 26;
+UPDATE Employee SET First_Name='Aaron', Last_Name='Neville', Street='909 Tell It Like It Is Terrace', City='New Orleans', Postal_Code='70115' WHERE Employee_ID = 27;
+UPDATE Employee SET First_Name='Britney', Last_Name='Spears', Street='101 Pop Princess Path', City='Kentwood', Postal_Code='70444' WHERE Employee_ID = 28;
+UPDATE Employee SET First_Name='Carlos', Last_Name='Santana', Street='202 Smooth Ave', City='San Francisco', Postal_Code='94110' WHERE Employee_ID = 29;
+UPDATE Employee SET First_Name='Diana', Last_Name='Krall', Street='303 Jazz Pianist Pl', City='Nanaimo', Postal_Code='V9R 1E3' WHERE Employee_ID = 30;
+UPDATE Employee SET First_Name='Elvis', Last_Name='Costello', Street='404 Watching the Detectives', City='London', Postal_Code='EC3A 1' WHERE Employee_ID = 31;
+UPDATE Employee SET First_Name='Fiona', Last_Name='Apple', Street='505 Criminal Way', City='New York', Postal_Code='10003' WHERE Employee_ID = 32;
+UPDATE Employee SET First_Name='Glen', Last_Name='Campbell', Street='606 Rhinestone Cowboy Rd', City='Delight', Postal_Code='71940' WHERE Employee_ID = 33;
+UPDATE Employee SET First_Name='Hank', Last_Name='Williams', Street='707 Lost Highway', City='Montgomery', Postal_Code='36101' WHERE Employee_ID = 34;
+UPDATE Employee SET First_Name='Iris', Last_Name='DeMent', Street='808 Our Town Rd', City='Paragould', Postal_Code='72450' WHERE Employee_ID = 35;
+UPDATE Employee SET First_Name='Johnny', Last_Name='Cash', Street='909 Man in Black Blvd', City='Kingsland', Postal_Code='71652' WHERE Employee_ID = 36;
+UPDATE Employee SET First_Name='Kacey', Last_Name='Musgraves', Street='101 Golden Hour St', City='Mineola', Postal_Code='75773' WHERE Employee_ID = 37;
+UPDATE Employee SET First_Name='Lyle', Last_Name='Lovett', Street='202 Large Band Blvd', City='Klein', Postal_Code='77379' WHERE Employee_ID = 38;
+UPDATE Employee SET First_Name='Margo', Last_Name='Price', Street='303 Midwest Farmer\'s Daughter Dr', City='Aledo', Postal_Code='61231' WHERE Employee_ID = 39;
+UPDATE Employee SET First_Name='Neil', Last_Name='Young', Street='404 Harvest Moon Ave', City='Toronto', Postal_Code='M4B 1B3' WHERE Employee_ID = 40;
+UPDATE Employee SET First_Name='Patsy', Last_Name='Cline', Street='505 Crazy Ave', City='Winchester', Postal_Code='22601' WHERE Employee_ID = 41;
+UPDATE Employee SET First_Name='Quentin', Last_Name='Tarantino', Street='606 Pulp Fiction Ln', City='Knoxville', Postal_Code='37901' WHERE Employee_ID = 42;
+
+-- 27 Alter Customer Table
+ALTER TABLE customer
+ADD COLUMN ID_Type VARCHAR(20);

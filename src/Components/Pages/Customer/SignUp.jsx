@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // Function to get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -14,60 +14,58 @@ const SignUp = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // State to manage customer information and errors
   const [customerInfo, setCustomerInfo] = useState({
-    firstName: "",
-    lastName: "",
-    street: "", // Separate street variable
-    city: "", // Separate city variable
-    postalCode: "", // Separate postal code variable
-    idType: "",
-    idInfo: "",
-    registrationDate: getCurrentDate(), // Set initial value to current date
+    Registration_Date: getCurrentDate(),
+    First_Name: "",
+    Last_Name: "",
+    Street: "",
+    City: "",
+    Postal_Code: "",
+    Security_ID: "",
+    ID_Type: "",
   });
   const [errors, setErrors] = useState({});
 
-  // Handler for form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate form fields
     const newErrors = {};
-    if (!customerInfo.firstName) {
-      newErrors.firstName = "First name is required";
+    if (!customerInfo.First_Name) {
+      newErrors.First_Name = "First name is required";
     }
-    if (!customerInfo.lastName) {
-      newErrors.lastName = "Last name is required";
+    if (!customerInfo.Last_Name) {
+      newErrors.Last_Name = "Last name is required";
     }
-    if (!customerInfo.street) {
-      newErrors.street = "Street is required";
+    if (!customerInfo.Street) {
+      newErrors.Street = "Street is required";
     }
-    if (!customerInfo.city) {
-      newErrors.city = "City is required";
+    if (!customerInfo.City) {
+      newErrors.City = "City is required";
     }
-    if (!customerInfo.postalCode) {
-      newErrors.postalCode = "Postal code is required";
+    if (!customerInfo.Postal_Code) {
+      newErrors.Postal_Code = "Postal code is required";
     }
-    if (!customerInfo.idType) {
-      newErrors.idType = "ID type is required";
+    if (!customerInfo.ID_Type) {
+      newErrors.ID_Type = "ID type is required";
     }
-    if (!customerInfo.idInfo) {
-      newErrors.idInfo = `${customerInfo.idType} is required`;
+    if (!customerInfo.Security_ID) {
+      newErrors.Security_ID = `${customerInfo.ID_Type} is required`;
     }
-    if (!customerInfo.registrationDate) {
-      newErrors.registrationDate = "Registration date is required";
-    }
-    setErrors(newErrors); // Update errors state
-    // Proceed with form submission if no errors
+    setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      console.log("Customer Info:", customerInfo);
-      navigate("/search"); // Navigate to search page
+      try {
+        // Make a POST request to add a new customer
+        await axios.post("http://localhost:3001/customer", customerInfo);
+        console.log("Sign up successful");
+        navigate("/search");
+      } catch (error) {
+        console.error("Error signing up:", error);
+      }
     }
   };
 
-  // Handler for changing ID type
   const handleIdTypeChange = (e) => {
-    const idType = e.target.value;
-    setCustomerInfo({ ...customerInfo, idType, idInfo: "" });
+    const ID_Type = e.target.value;
+    setCustomerInfo({ ...customerInfo, ID_Type, Security_ID: "" });
   };
 
   return (
@@ -78,70 +76,72 @@ const SignUp = () => {
           <label>First Name:</label>
           <input
             type="text"
-            value={customerInfo.firstName}
+            value={customerInfo.First_Name}
             onChange={(e) =>
-              setCustomerInfo({ ...customerInfo, firstName: e.target.value })
+              setCustomerInfo({ ...customerInfo, First_Name: e.target.value })
             }
             required
           />
-          {errors.firstName && (
-            <span className="error">{errors.firstName}</span>
+          {errors.First_Name && (
+            <span className="error">{errors.First_Name}</span>
           )}
         </div>
         <div className="form-group">
           <label>Last Name:</label>
           <input
             type="text"
-            value={customerInfo.lastName}
+            value={customerInfo.Last_Name}
             onChange={(e) =>
-              setCustomerInfo({ ...customerInfo, lastName: e.target.value })
+              setCustomerInfo({ ...customerInfo, Last_Name: e.target.value })
             }
             required
           />
-          {errors.lastName && <span className="error">{errors.lastName}</span>}
+          {errors.Last_Name && (
+            <span className="error">{errors.Last_Name}</span>
+          )}
         </div>
         <div className="form-group">
           <label>Street:</label>
           <input
             type="text"
-            value={customerInfo.street}
+            value={customerInfo.Street}
             onChange={(e) =>
-              setCustomerInfo({ ...customerInfo, street: e.target.value })
+              setCustomerInfo({ ...customerInfo, Street: e.target.value })
             }
             required
           />
-          {errors.street && <span className="error">{errors.street}</span>}
+          {errors.Street && <span className="error">{errors.Street}</span>}
         </div>
         <div className="form-group">
           <label>City:</label>
           <input
             type="text"
-            value={customerInfo.city}
+            value={customerInfo.City}
             onChange={(e) =>
-              setCustomerInfo({ ...customerInfo, city: e.target.value })
+              setCustomerInfo({ ...customerInfo, City: e.target.value })
             }
             required
           />
-          {errors.city && <span className="error">{errors.city}</span>}
+          {errors.City && <span className="error">{errors.City}</span>}
         </div>
         <div className="form-group">
           <label>Postal Code:</label>
           <input
             type="text"
-            value={customerInfo.postalCode}
+            value={customerInfo.Postal_Code}
             onChange={(e) =>
-              setCustomerInfo({ ...customerInfo, postalCode: e.target.value })
+              setCustomerInfo({ ...customerInfo, Postal_Code: e.target.value })
             }
             required
           />
-          {errors.postalCode && (
-            <span className="error">{errors.postalCode}</span>
+          {errors.Postal_Code && (
+            <span className="error">{errors.Postal_Code}</span>
           )}
         </div>
         <div className="form-group">
           <label>ID Type:</label>
           <select
-            value={customerInfo.idType}
+            value={customerInfo.ID_Type}
             onChange={handleIdTypeChange}
             required
           >
@@ -149,32 +149,31 @@ const SignUp = () => {
             <option value="SSN">SSN</option>
             <option value="SIN">SIN</option>
             <option value="Driver's License">Driver's License</option>
-            {/* Add more options as needed */}
           </select>
-          {errors.idType && <span className="error">{errors.idType}</span>}
+          {errors.ID_Type && <span className="error">{errors.ID_Type}</span>}
         </div>
-        {/* Render additional input field based on selected ID type */}
-        {customerInfo.idType && (
+        {customerInfo.ID_Type && (
           <div className="form-group">
-            <label>{customerInfo.idType}:</label>
+            <label>{customerInfo.ID_Type}:</label>
             <input
               type="text"
-              value={customerInfo.idInfo}
+              value={customerInfo.Security_ID}
               onChange={(e) =>
-                setCustomerInfo({ ...customerInfo, idInfo: e.target.value })
+                setCustomerInfo({
+                  ...customerInfo,
+                  Security_ID: e.target.value,
+                })
               }
               required
             />
-            {errors.idInfo && <span className="error">{errors.idInfo}</span>}
+            {errors.Security_ID && (
+              <span className="error">{errors.Security_ID}</span>
+            )}
           </div>
         )}
         <div className="form-group">
           <label>Registration Date:</label>
-          <input
-            type="text"
-            value={customerInfo.registrationDate}
-            readOnly // Make the input uneditable
-          />
+          <input type="text" value={customerInfo.Registration_Date} readOnly />
         </div>
         <button type="submit" className="btn" aria-label="Sign up">
           Sign up
