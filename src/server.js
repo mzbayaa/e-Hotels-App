@@ -108,18 +108,17 @@ app.get("/rented-rooms", (req, res) => {
   });
 });
 
-// POST route for adding a new renting ID to the archive table
-app.post("/archive", (req, res) => {
-  const { rentingId } = req.body;
+app.post('/archive', (req, res) => {
+  const { rentingId, bookingId } = req.body; // Expecting bookingId to be passed, can be null
 
-  // Insert the renting ID into the archive table
-  const query = "INSERT INTO Archive (Renting_ID) VALUES (?)";
-  db.query(query, [rentingId], (err, result) => {
-    if (err) {
-      console.error('Error adding renting ID to archive:', err);
-      return res.status(500).json({ error: 'Error adding renting ID to archive' });
-    }
-    res.json({ message: 'Renting ID added to archive successfully' });
+  // Use NULL instead of 0 for bookingId when there is no booking associated
+  const query = "INSERT INTO Archive (Renting_ID, Booking_ID) VALUES (?, ?)";
+  db.query(query, [rentingId, bookingId || null], (err, result) => {
+      if (err) {
+          console.error('Error adding renting ID to archive:', err);
+          return res.status(500).json({ error: 'Error adding renting ID to archive' });
+      }
+      res.json({ message: 'Renting ID added to archive successfully' });
   });
 });
 
