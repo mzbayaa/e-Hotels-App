@@ -732,3 +732,11 @@ ALTER TABLE `ehotels`.`archive`
 DROP INDEX `Customer_ID` ;
 
 ALTER TABLE ehotels.archive DROP COLUMN Customer_ID;
+
+-- 27 Alter Archive to not require foreign key for renting_id
+ALTER TABLE `ehotels`.`archive` 
+DROP FOREIGN KEY `archive_ibfk_3`;
+
+ALTER TABLE `ehotels`.`archive` 
+DROP INDEX `Renting_ID` ;
+
