@@ -50,8 +50,17 @@ const SignUp = () => {
     if (!customerInfo.Security_ID) {
       newErrors.Security_ID = `${customerInfo.ID_Type} is required`;
     }
+    if (!customerInfo.registrationDate) {
+      newErrors.registrationDate = "Registration date is required";
+    }
     setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
+
+  if (Object.keys(newErrors).length === 0) {
+    // Optionally, store in localStorage for immediate access or offline use
+    localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+
+    // Check if online before attempting to POST to server
+    if (navigator.onLine) {
       try {
         // Make a POST request to add a new customer
         await axios.post("http://localhost:3001/customer", customerInfo);
@@ -59,8 +68,14 @@ const SignUp = () => {
         navigate("/search");
       } catch (error) {
         console.error("Error signing up:", error);
+        // Optional: Handle offline scenario or server error
       }
+    } else {
+      // Optional: Logic for handling offline state, e.g., queuing data for later sync
+      console.log("Offline: Customer info saved locally and will sync when online.");
+      navigate("/search");
     }
+  }
   };
 
   const handleIdTypeChange = (e) => {
